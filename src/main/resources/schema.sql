@@ -7,10 +7,10 @@ CREATE TABLE exercise
 (
     id             int GENERATED ALWAYS AS IDENTITY (START WITH 1) NOT NULL,
     name           varchar(100)                                    NOT NULL,
-    description    longvarchar(5000)  NULL,
+    description    longvarchar(5000)                               NULL,
     category       varchar(20)                                     NOT NULL,
-    muscle_group   varchar(20) NULL,
-    equipment_type varchar(20) NULL,
+    muscle_group   varchar(20)                                     NULL,
+    equipment_type varchar(20)                                     NULL,
     created_at     timestamp                                       NOT NULL,
     CONSTRAINT exercise_pk PRIMARY KEY (id)
 );
@@ -22,10 +22,10 @@ CREATE TABLE exerciseset
     workout_exercise_id int                                             NOT NULL,
     set_type            varchar(20)                                     NOT NULL,
     set_number          int                                             NOT NULL,
-    weight_kg           decimal(5, 2) NULL,
+    weight_kg           decimal(5, 2)                                   NULL,
     reps                int                                             NOT NULL,
-    rpe                 int NULL,
-    notes               longvarchar(2000)  NULL,
+    rpe                 int                                             NULL,
+    notes               longvarchar(2000)                               NULL,
     completed           boolean                                         NOT NULL,
     CONSTRAINT exerciseset_pk PRIMARY KEY (id)
 );
@@ -50,10 +50,11 @@ CREATE TABLE workout
     id               int GENERATED ALWAYS AS IDENTITY (START WITH 1) NOT NULL,
     user_id          int                                             NOT NULL,
     name             varchar(100)                                    NOT NULL,
-    "date"           date NULL,
-    start_time       time NULL,
-    duration_minutes int NULL,
-    notes            longvarchar(2000)  NULL,
+    "date"           date                                            NULL,
+    start_time       time                                            NULL,
+    end_time         time                                            NULL,
+    duration_minutes int                                             NULL,
+    notes            longvarchar(2000)                               NULL,
     created_at       timestamp                                       NOT NULL,
     CONSTRAINT workout_pk PRIMARY KEY (id)
 );
@@ -65,7 +66,7 @@ CREATE TABLE workoutexercise
     workout_id  int                                             NOT NULL,
     exercise_id int                                             NOT NULL,
     order_index int                                             NOT NULL,
-    notes       longvarchar(2000)  NOT NULL,
+    notes       longvarchar(2000)                               NOT NULL,
     CONSTRAINT workoutexercise_pk PRIMARY KEY (id)
 );
 
