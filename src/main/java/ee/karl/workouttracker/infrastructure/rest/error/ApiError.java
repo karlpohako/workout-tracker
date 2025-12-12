@@ -1,4 +1,4 @@
-package ee.karl.strength_training_tracker.infrastructure.rest.error;
+package ee.karl.workouttracker.infrastructure.rest.error;
 
 import lombok.Data;
 import org.springframework.http.HttpStatus;

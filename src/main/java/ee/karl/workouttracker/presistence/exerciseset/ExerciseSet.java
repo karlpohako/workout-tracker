@@ -1,6 +1,6 @@
-package ee.karl.strength_training_tracker.presistence.exerciseset;
+package ee.karl.workouttracker.presistence.exerciseset;
 
-import ee.karl.strength_training_tracker.presistence.workoutexercise.WorkoutExercise;
+import ee.karl.workouttracker.presistence.workoutexercise.WorkoutExercise;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

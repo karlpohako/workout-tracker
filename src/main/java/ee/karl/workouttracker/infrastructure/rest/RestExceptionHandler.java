@@ -1,8 +1,8 @@
-package ee.karl.strength_training_tracker.infrastructure.rest;
+package ee.karl.workouttracker.infrastructure.rest;
 
-import ee.karl.strength_training_tracker.infrastructure.rest.error.ApiError;
-import ee.karl.strength_training_tracker.infrastructure.rest.exception.DataNotFoundException;
-import ee.karl.strength_training_tracker.infrastructure.rest.exception.ForbiddenException;
+import ee.karl.workouttracker.infrastructure.rest.error.ApiError;
+import ee.karl.workouttracker.infrastructure.rest.exception.DataNotFoundException;
+import ee.karl.workouttracker.infrastructure.rest.exception.ForbiddenException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

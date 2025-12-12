@@ -1,4 +1,4 @@
-package ee.karl.strength_training_tracker.infrastructure.db;
+package ee.karl.workouttracker.infrastructure.db;
 
 import org.hsqldb.server.Server;
 import org.slf4j.Logger;

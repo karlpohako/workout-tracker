@@ -1,4 +1,4 @@
-package ee.karl.strength_training_tracker.infrastructure.rest.exception;
+package ee.karl.workouttracker.infrastructure.rest.exception;
 
 import lombok.Getter;
 
