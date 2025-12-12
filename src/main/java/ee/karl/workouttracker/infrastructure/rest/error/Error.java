@@ -6,7 +6,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum Error {
-    SOME_ERROR_ENUM("Some error message");
+
+    EXERCISE_NOT_FOUND("Exercise not found");
 
     private final String message;
 }
