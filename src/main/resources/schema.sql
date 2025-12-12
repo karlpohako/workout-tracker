@@ -15,8 +15,8 @@ CREATE TABLE exercise
     CONSTRAINT exercise_pk PRIMARY KEY (id)
 );
 
--- Table: exerciseset
-CREATE TABLE exerciseset
+-- Table: exercise_set
+CREATE TABLE exercise_set
 (
     id                  int GENERATED ALWAYS AS IDENTITY (START WITH 1) NOT NULL,
     workout_exercise_id int                                             NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE exerciseset
     rpe                 int                                             NULL,
     notes               longvarchar(2000)                               NULL,
     completed           boolean                                         NOT NULL,
-    CONSTRAINT exerciseset_pk PRIMARY KEY (id)
+    CONSTRAINT exercise_set_pk PRIMARY KEY (id)
 );
 
 -- Table: user
@@ -59,23 +59,23 @@ CREATE TABLE workout
     CONSTRAINT workout_pk PRIMARY KEY (id)
 );
 
--- Table: workoutexercise
-CREATE TABLE workoutexercise
+-- Table: workout_exercise
+CREATE TABLE workout_exercise
 (
     id          int GENERATED ALWAYS AS IDENTITY (START WITH 1) NOT NULL,
     workout_id  int                                             NOT NULL,
     exercise_id int                                             NOT NULL,
     order_index int                                             NOT NULL,
     notes       longvarchar(2000)                               NOT NULL,
-    CONSTRAINT workoutexercise_pk PRIMARY KEY (id)
+    CONSTRAINT workout_exercise_pk PRIMARY KEY (id)
 );
 
 -- foreign keys
--- Reference: exerciseset_workoutexercise (table: exerciseset)
-ALTER TABLE exerciseset
-    ADD CONSTRAINT exerciseset_workoutexercise
+-- Reference: exercise_set_workoutexercise (table: exercise_set)
+ALTER TABLE exercise_set
+    ADD CONSTRAINT exercise_set_workout_exercise
         FOREIGN KEY (workout_exercise_id)
-            REFERENCES workoutexercise (id)
+            REFERENCES workout_exercise (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE;
 
@@ -87,17 +87,17 @@ ALTER TABLE workout
             ON DELETE CASCADE
             ON UPDATE CASCADE;
 
--- Reference: workoutexercise_exercise (table: workoutexercise)
-ALTER TABLE workoutexercise
-    ADD CONSTRAINT workoutexercise_exercise
+-- Reference: workout_exercise_exercise (table: workout_exercise)
+ALTER TABLE workout_exercise
+    ADD CONSTRAINT workout_exercise_exercise
         FOREIGN KEY (exercise_id)
             REFERENCES exercise (id)
             ON DELETE RESTRICT
             ON UPDATE CASCADE;
 
--- Reference: workoutexercise_workout (table: workoutexercise)
-ALTER TABLE workoutexercise
-    ADD CONSTRAINT workoutexercise_workout
+-- Reference: workout_exercise_workout (table: workout_exercise)
+ALTER TABLE workout_exercise
+    ADD CONSTRAINT workout_exercise_workout
         FOREIGN KEY (workout_id)
             REFERENCES workout (id)
             ON DELETE CASCADE
