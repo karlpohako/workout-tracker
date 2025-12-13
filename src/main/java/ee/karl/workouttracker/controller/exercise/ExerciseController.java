@@ -1,6 +1,7 @@
 package ee.karl.workouttracker.controller.exercise;
 
 import ee.karl.workouttracker.controller.exercise.dto.ExerciseDto;
+import ee.karl.workouttracker.controller.exercise.dto.ExerciseInfoDto;
 import ee.karl.workouttracker.infrastructure.rest.error.ApiError;
 import ee.karl.workouttracker.service.exercise.ExerciseService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/")
@@ -30,6 +33,15 @@ class ExerciseController {
     })
     public ExerciseDto findExercise(@PathVariable Integer exerciseId) {
         return exerciseService.findExercise(exerciseId);
+    }
+
+    @GetMapping("/exercises")
+    @Operation(summary = "Finds all exercises")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Returns all exercises")
+    })
+    public List<ExerciseInfoDto> findAllExercises() {
+        return exerciseService.findAllExercises();
     }
 
 }

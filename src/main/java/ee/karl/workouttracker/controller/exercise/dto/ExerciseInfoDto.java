@@ -1,23 +1,18 @@
 package ee.karl.workouttracker.controller.exercise.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-
-import java.time.Instant;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class ExerciseDto {
+@EqualsAndHashCode(callSuper = true)
+public class ExerciseInfoDto extends ExerciseDto {
 
-    private String name;
-    private String description;
-    private String category;
-    private String muscleGroup;
-    private String equipmentType;
-    private Instant createdAt;
+    private Integer exerciseId;
 
 }
