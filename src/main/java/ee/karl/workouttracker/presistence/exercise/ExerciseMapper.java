@@ -14,9 +14,9 @@ public interface ExerciseMapper {
 
     @Mapping(target = "name", source = "name")
     @Mapping(target = "description", source = "description")
-    @Mapping(target = "category", source = "category")
-    @Mapping(target = "muscleGroup", source = "muscleGroup")
-    @Mapping(target = "equipmentType", source = "equipmentType")
+    @Mapping(target = "category", source = "category.name")
+    @Mapping(target = "muscleGroup", source = "muscleGroup.name")
+    @Mapping(target = "equipmentType", source = "equipmentType.name")
     @Mapping(target = "createdAt", source = "createdAt")
     ExerciseDto toExerciseDto(Exercise exercise);
 

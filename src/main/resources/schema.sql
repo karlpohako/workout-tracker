@@ -1,17 +1,33 @@
 -- Created by Redgate Data Modeler (https://datamodeler.redgate-platform.com)
--- Last modification date: 2025-12-10 20:13:53.17
+-- Last modification date: 2025-12-13 08:58:38.79
 
 -- tables
+-- Table: category
+CREATE TABLE category
+(
+    id   int GENERATED ALWAYS AS IDENTITY (START WITH 1) NOT NULL,
+    name varchar(100)                                    NOT NULL,
+    CONSTRAINT id PRIMARY KEY (id)
+);
+
+-- Table: equipment_type
+CREATE TABLE equipment_type
+(
+    id   int GENERATED ALWAYS AS IDENTITY (START WITH 1) NOT NULL,
+    name varchar(100)                                    NOT NULL,
+    CONSTRAINT equipment_type_pk PRIMARY KEY (id)
+);
+
 -- Table: exercise
 CREATE TABLE exercise
 (
-    id             int GENERATED ALWAYS AS IDENTITY (START WITH 1) NOT NULL,
-    name           varchar(100)                                    NOT NULL,
-    description    longvarchar(5000)                               NULL,
-    category       varchar(20)                                     NOT NULL,
-    muscle_group   varchar(20)                                     NULL,
-    equipment_type varchar(20)                                     NULL,
-    created_at     timestamp                                       NOT NULL,
+    id                int GENERATED ALWAYS AS IDENTITY (START WITH 1) NOT NULL,
+    name              varchar(100)                                    NOT NULL,
+    description       longvarchar(5000)                               NULL,
+    category_id       int                                             NOT NULL,
+    muscle_group_id   int                                             NOT NULL,
+    equipment_type_id int                                             NOT NULL,
+    created_at        timestamp                                       NOT NULL,
     CONSTRAINT exercise_pk PRIMARY KEY (id)
 );
 
@@ -20,7 +36,7 @@ CREATE TABLE exercise_set
 (
     id                  int GENERATED ALWAYS AS IDENTITY (START WITH 1) NOT NULL,
     workout_exercise_id int                                             NOT NULL,
-    set_type            varchar(20)                                     NOT NULL,
+    set_type_id         int                                             NOT NULL,
     set_number          int                                             NOT NULL,
     weight_kg           decimal(5, 2)                                   NULL,
     reps                int                                             NOT NULL,
@@ -28,6 +44,22 @@ CREATE TABLE exercise_set
     notes               longvarchar(2000)                               NULL,
     completed           boolean                                         NOT NULL,
     CONSTRAINT exercise_set_pk PRIMARY KEY (id)
+);
+
+-- Table: muscle_group
+CREATE TABLE muscle_group
+(
+    id   int GENERATED ALWAYS AS IDENTITY (START WITH 1) NOT NULL,
+    name varchar(100)                                    NOT NULL,
+    CONSTRAINT muscle_group_pk PRIMARY KEY (id)
+);
+
+-- Table: set_type
+CREATE TABLE set_type
+(
+    id   int GENERATED ALWAYS AS IDENTITY (START WITH 1) NOT NULL,
+    name varchar(100)                                    NOT NULL,
+    CONSTRAINT set_type_pk PRIMARY KEY (id)
 );
 
 -- Table: user
@@ -71,9 +103,41 @@ CREATE TABLE workout_exercise
 );
 
 -- foreign keys
--- Reference: exercise_set_workoutexercise (table: exercise_set)
+-- Reference: exercise_category (table: exercise)
+ALTER TABLE exercise
+    ADD CONSTRAINT exercise_category
+        FOREIGN KEY (category_id)
+            REFERENCES category (id)
+            ON DELETE RESTRICT
+            ON UPDATE RESTRICT;
+
+-- Reference: exercise_equipment_type (table: exercise)
+ALTER TABLE exercise
+    ADD CONSTRAINT exercise_equipment_type
+        FOREIGN KEY (equipment_type_id)
+            REFERENCES equipment_type (id)
+            ON DELETE RESTRICT
+            ON UPDATE RESTRICT;
+
+-- Reference: exercise_muscle_group (table: exercise)
+ALTER TABLE exercise
+    ADD CONSTRAINT exercise_muscle_group
+        FOREIGN KEY (muscle_group_id)
+            REFERENCES muscle_group (id)
+            ON DELETE RESTRICT
+            ON UPDATE RESTRICT;
+
+-- Reference: exercise_set_set_type (table: exercise_set)
 ALTER TABLE exercise_set
-    ADD CONSTRAINT exercise_set_workout_exercise
+    ADD CONSTRAINT exercise_set_set_type
+        FOREIGN KEY (set_type_id)
+            REFERENCES set_type (id)
+            ON DELETE RESTRICT
+            ON UPDATE RESTRICT;
+
+-- Reference: exerciseset_workoutexercise (table: exercise_set)
+ALTER TABLE exercise_set
+    ADD CONSTRAINT exerciseset_workoutexercise
         FOREIGN KEY (workout_exercise_id)
             REFERENCES workout_exercise (id)
             ON DELETE CASCADE
@@ -87,17 +151,17 @@ ALTER TABLE workout
             ON DELETE CASCADE
             ON UPDATE CASCADE;
 
--- Reference: workout_exercise_exercise (table: workout_exercise)
+-- Reference: workoutexercise_exercise (table: workout_exercise)
 ALTER TABLE workout_exercise
-    ADD CONSTRAINT workout_exercise_exercise
+    ADD CONSTRAINT workoutexercise_exercise
         FOREIGN KEY (exercise_id)
             REFERENCES exercise (id)
             ON DELETE RESTRICT
             ON UPDATE CASCADE;
 
--- Reference: workout_exercise_workout (table: workout_exercise)
+-- Reference: workoutexercise_workout (table: workout_exercise)
 ALTER TABLE workout_exercise
-    ADD CONSTRAINT workout_exercise_workout
+    ADD CONSTRAINT workoutexercise_workout
         FOREIGN KEY (workout_id)
             REFERENCES workout (id)
             ON DELETE CASCADE

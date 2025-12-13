@@ -1,5 +1,8 @@
 package ee.karl.workouttracker.presistence.exercise;
 
+import ee.karl.workouttracker.presistence.category.Category;
+import ee.karl.workouttracker.presistence.equipmenttype.EquipmentType;
+import ee.karl.workouttracker.presistence.musclegroup.MuscleGroup;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -27,18 +30,20 @@ public class Exercise {
     @Column(name = "DESCRIPTION", length = 5000)
     private String description;
 
-    @Size(max = 20)
     @NotNull
-    @Column(name = "CATEGORY", nullable = false, length = 20)
-    private String category;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "CATEGORY_ID", nullable = false)
+    private Category category;
 
-    @Size(max = 20)
-    @Column(name = "MUSCLE_GROUP", length = 20)
-    private String muscleGroup;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "MUSCLE_GROUP_ID", nullable = false)
+    private MuscleGroup muscleGroup;
 
-    @Size(max = 20)
-    @Column(name = "EQUIPMENT_TYPE", length = 20)
-    private String equipmentType;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "EQUIPMENT_TYPE_ID", nullable = false)
+    private EquipmentType equipmentType;
 
     @NotNull
     @Column(name = "CREATED_AT", nullable = false)
