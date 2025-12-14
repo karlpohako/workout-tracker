@@ -4,20 +4,51 @@ import ee.karl.workouttracker.controller.exercise.dto.ExerciseDto;
 import ee.karl.workouttracker.controller.exercise.dto.ExerciseInfoDto;
 import ee.karl.workouttracker.infrastructure.rest.error.Error;
 import ee.karl.workouttracker.infrastructure.rest.exception.DataNotFoundException;
+import ee.karl.workouttracker.infrastructure.rest.exception.DatabaseNameConflictException;
+import ee.karl.workouttracker.presistence.category.Category;
+import ee.karl.workouttracker.presistence.category.CategoryRepository;
+import ee.karl.workouttracker.presistence.equipmenttype.EquipmentType;
+import ee.karl.workouttracker.presistence.equipmenttype.EquipmentTypeRepository;
 import ee.karl.workouttracker.presistence.exercise.Exercise;
 import ee.karl.workouttracker.presistence.exercise.ExerciseMapper;
 import ee.karl.workouttracker.presistence.exercise.ExerciseRepository;
+import ee.karl.workouttracker.presistence.musclegroup.MuscleGroup;
+import ee.karl.workouttracker.presistence.musclegroup.MuscleGroupRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ExerciseService {
 
     private final ExerciseRepository exerciseRepository;
     private final ExerciseMapper exerciseMapper;
+    private final CategoryRepository categoryRepository;
+    private final MuscleGroupRepository muscleGroupRepository;
+    private final EquipmentTypeRepository equipmentTypeRepository;
+
+    public void addExercise(ExerciseDto exerciseDto) {
+        Category category = categoryRepository.findCategoryByName(exerciseDto.getCategory())
+                .orElseThrow(() -> new DataNotFoundException(Error.CATEGORY_NOT_FOUND.getMessage()));
+
+        MuscleGroup muscleGroup = muscleGroupRepository.findMuscleGroupByName(exerciseDto.getMuscleGroup())
+                .orElseThrow(() -> new DataNotFoundException(Error.MUSCLE_GROUP_NOT_FOUND.getMessage()));
+
+        EquipmentType equipmentType = equipmentTypeRepository.findEquipmentTypeByName(exerciseDto.getEquipmentType())
+                .orElseThrow(() -> new DataNotFoundException(Error.EQUIPMENT_TYPE_NOT_FOUND.getMessage()));
+
+        Exercise exercise = createExerciseOrThrowIfAlreadyExists(exerciseDto);
+
+        exercise.setMuscleGroup(muscleGroup);
+        exercise.setCategory(category);
+        exercise.setEquipmentType(equipmentType);
+
+        exerciseRepository.save(exercise);
+    }
 
     public ExerciseDto findExercise(Integer exerciseId) {
         Exercise exercise = exerciseRepository.findById(exerciseId)
@@ -27,5 +58,17 @@ public class ExerciseService {
 
     public List<ExerciseInfoDto> findAllExercises() {
         return exerciseMapper.toExerciseInfoDtos(exerciseRepository.findAll());
+    }
+
+    private Exercise createExerciseOrThrowIfAlreadyExists(ExerciseDto exerciseDto) {
+        String name = exerciseDto.getName();
+        String category = exerciseDto.getCategory();
+
+        boolean exists = exerciseRepository.findExerciseByNameAndCategory(name, category);
+        if (exists) {
+            throw new DatabaseNameConflictException(Error.EXERCISE_ALREADY_EXISTS.getMessage());
+        }
+
+        return exerciseMapper.toExercise(exerciseDto);
     }
 }

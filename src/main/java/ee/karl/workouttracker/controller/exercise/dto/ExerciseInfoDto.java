@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.time.Instant;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,5 +16,6 @@ import lombok.experimental.SuperBuilder;
 public class ExerciseInfoDto extends ExerciseDto {
 
     private Integer exerciseId;
+    private Instant createdAt;
 
 }

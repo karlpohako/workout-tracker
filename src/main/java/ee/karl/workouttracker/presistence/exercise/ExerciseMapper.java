@@ -17,12 +17,19 @@ public interface ExerciseMapper {
     @Mapping(target = "category", source = "category.name")
     @Mapping(target = "muscleGroup", source = "muscleGroup.name")
     @Mapping(target = "equipmentType", source = "equipmentType.name")
-    @Mapping(target = "createdAt", source = "createdAt")
     ExerciseDto toExerciseDto(Exercise exercise);
 
     @InheritConfiguration(name = "toExerciseDto")
     @Mapping(target = "exerciseId", source = "id")
+    @Mapping(target = "createdAt", source = "createdAt")
     ExerciseInfoDto toExerciseInfoDto(Exercise exercise);
 
     List<ExerciseInfoDto> toExerciseInfoDtos(List<Exercise> all);
+
+    @Mapping(target = "name", source = "name")
+    @Mapping(target = "description", source = "description")
+    @Mapping(target = "category", ignore = true)
+    @Mapping(target = "muscleGroup", ignore = true)
+    @Mapping(target = "equipmentType", ignore = true)
+    Exercise toExercise(ExerciseDto exerciseDto);
 }

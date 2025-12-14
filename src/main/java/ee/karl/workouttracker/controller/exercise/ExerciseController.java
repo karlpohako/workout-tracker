@@ -9,11 +9,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,6 +21,21 @@ import java.util.List;
 class ExerciseController {
 
     private final ExerciseService exerciseService;
+
+    @PostMapping("/exercise")
+    @Operation(summary = "Adds new exercise")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Creates new exercise and adds it to database"),
+            @ApiResponse(responseCode = "400", description = "If exerciseDto is invalid",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(responseCode = "404", description = "If category, muscle group or equipment type is not found",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(responseCode = "409", description = "If exercise already exists",
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    public void addExercise(@RequestBody @Valid ExerciseDto exerciseDto) {
+        exerciseService.addExercise(exerciseDto);
+    }
 
     @GetMapping("/exercise/{exerciseId}")
     @Operation(summary = "Finds exercise by id", description = "Returns exercise with given id, if exercise doesn't exist throws an error")
