@@ -14,6 +14,8 @@ import ee.karl.workouttracker.presistence.exercise.ExerciseMapper;
 import ee.karl.workouttracker.presistence.exercise.ExerciseRepository;
 import ee.karl.workouttracker.presistence.musclegroup.MuscleGroup;
 import ee.karl.workouttracker.presistence.musclegroup.MuscleGroupRepository;
+import ee.karl.workouttracker.presistence.workoutexercise.WorkoutExerciseRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,7 @@ public class ExerciseService {
     private final CategoryRepository categoryRepository;
     private final MuscleGroupRepository muscleGroupRepository;
     private final EquipmentTypeRepository equipmentTypeRepository;
+    private final WorkoutExerciseRepository workoutExerciseRepository;
 
     public void addExercise(ExerciseDto exerciseDto) {
         Category category = getCategoryOrThrow(exerciseDto.getCategory());
@@ -65,6 +68,19 @@ public class ExerciseService {
         exercise.setEquipmentType(equipmentType);
         exerciseMapper.updateExercise(exerciseDto, exercise);
         exerciseRepository.save(exercise);
+    }
+
+    @Transactional
+    public void deleteExercise(Integer exerciseId) {
+        getExerciseByIdOrThrow(exerciseId);
+        isExerciseUsedInWorkouts(exerciseId);
+        exerciseRepository.deleteById(exerciseId);
+    }
+
+    private void isExerciseUsedInWorkouts(Integer exerciseId) {
+        if (workoutExerciseRepository.isExerciseUsedInWorkoutBy(exerciseId)) {
+            throw new DatabaseNameConflictException(Error.WORKOUT_EXERCISE_IN_USE.getMessage());
+        }
     }
 
     private Exercise getExerciseByIdOrThrow(Integer exerciseId) {

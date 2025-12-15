@@ -3,6 +3,7 @@ package ee.karl.workouttracker.infrastructure.rest;
 import ee.karl.workouttracker.infrastructure.rest.error.ApiError;
 import ee.karl.workouttracker.infrastructure.rest.exception.DataNotFoundException;
 import ee.karl.workouttracker.infrastructure.rest.exception.DatabaseNameConflictException;
+import ee.karl.workouttracker.infrastructure.rest.exception.ExerciseInUseException;
 import ee.karl.workouttracker.infrastructure.rest.exception.ForbiddenException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
@@ -60,6 +61,21 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(DatabaseNameConflictException.class)
     public ResponseEntity<ApiError> handleDatabaseNameConflictException(DatabaseNameConflictException exception, HttpServletRequest request) {
+
+        ApiError apiError = new ApiError();
+        apiError.setStatus(HttpStatus.CONFLICT);
+        apiError.setMessage(exception.getMessage());
+        apiError.setPath(request.getRequestURI());
+
+        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
+    }
+
+    /**
+     * Handles cases where exercise is used in workouts.
+     * Produces a 409 Conflict response with an error message and request path.
+     */
+    @ExceptionHandler(ExerciseInUseException.class)
+    public ResponseEntity<ApiError> handleExerciseInUseException(ExerciseInUseException exception, HttpServletRequest request) {
 
         ApiError apiError = new ApiError();
         apiError.setStatus(HttpStatus.CONFLICT);

@@ -69,4 +69,15 @@ class ExerciseController {
     public void updateExercise(@PathVariable Integer exerciseId, @RequestBody @Valid ExerciseDto exerciseDto) {
         exerciseService.updateExercise(exerciseId, exerciseDto);
     }
+
+    @DeleteMapping("/exercise/{exerciseId}")
+    @Operation(summary = "Deletes exercise by id", description = "Deletes exercise with given id if exercise is not used in workout")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Deletes exercise"),
+            @ApiResponse(responseCode = "409", description = "Exercise is used in workout",
+            content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    public void deleteExercise(@PathVariable Integer exerciseId) {
+        exerciseService.deleteExercise(exerciseId);
+    }
 }
