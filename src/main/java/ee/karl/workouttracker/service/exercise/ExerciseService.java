@@ -32,15 +32,9 @@ public class ExerciseService {
     private final EquipmentTypeRepository equipmentTypeRepository;
 
     public void addExercise(ExerciseDto exerciseDto) {
-        Category category = categoryRepository.findCategoryByName(exerciseDto.getCategory())
-                .orElseThrow(() -> new DataNotFoundException(Error.CATEGORY_NOT_FOUND.getMessage()));
-
-        MuscleGroup muscleGroup = muscleGroupRepository.findMuscleGroupByName(exerciseDto.getMuscleGroup())
-                .orElseThrow(() -> new DataNotFoundException(Error.MUSCLE_GROUP_NOT_FOUND.getMessage()));
-
-        EquipmentType equipmentType = equipmentTypeRepository.findEquipmentTypeByName(exerciseDto.getEquipmentType())
-                .orElseThrow(() -> new DataNotFoundException(Error.EQUIPMENT_TYPE_NOT_FOUND.getMessage()));
-
+        Category category = getCategoryOrThrow(exerciseDto.getCategory());
+        MuscleGroup muscleGroup = getMuscleGroupOrThrow(exerciseDto.getMuscleGroup());
+        EquipmentType equipmentType = getEquipmentTypeOrThrow(exerciseDto.getEquipmentType());
         Exercise exercise = createExerciseOrThrowIfAlreadyExists(exerciseDto);
 
         exercise.setMuscleGroup(muscleGroup);
@@ -58,6 +52,39 @@ public class ExerciseService {
 
     public List<ExerciseInfoDto> findAllExercises() {
         return exerciseMapper.toExerciseInfoDtos(exerciseRepository.findAll());
+    }
+
+    public void updateExercise(Integer exerciseId, ExerciseDto exerciseDto) {
+        Exercise exercise = getExerciseByIdOrThrow(exerciseId);
+        Category category = getCategoryOrThrow(exerciseDto.getCategory());
+        MuscleGroup muscleGroup = getMuscleGroupOrThrow(exerciseDto.getMuscleGroup());
+        EquipmentType equipmentType = getEquipmentTypeOrThrow(exerciseDto.getEquipmentType());
+
+        exercise.setCategory(category);
+        exercise.setMuscleGroup(muscleGroup);
+        exercise.setEquipmentType(equipmentType);
+        exerciseMapper.updateExercise(exerciseDto, exercise);
+        exerciseRepository.save(exercise);
+    }
+
+    private Exercise getExerciseByIdOrThrow(Integer exerciseId) {
+        return exerciseRepository.findById(exerciseId)
+                .orElseThrow(() -> new DataNotFoundException(Error.EXERCISE_NOT_FOUND.getMessage()));
+    }
+
+    private Category getCategoryOrThrow(String categoryName) {
+        return categoryRepository.findCategoryByName(categoryName)
+                .orElseThrow(() -> new DataNotFoundException(Error.CATEGORY_NOT_FOUND.getMessage()));
+    }
+
+    private MuscleGroup getMuscleGroupOrThrow(String muscleGroupName) {
+        return muscleGroupRepository.findMuscleGroupByName(muscleGroupName)
+                .orElseThrow(() -> new DataNotFoundException(Error.MUSCLE_GROUP_NOT_FOUND.getMessage()));
+    }
+
+    private EquipmentType getEquipmentTypeOrThrow(String equipmentTypeName) {
+        return equipmentTypeRepository.findEquipmentTypeByName(equipmentTypeName)
+                .orElseThrow(() -> new DataNotFoundException(Error.EQUIPMENT_TYPE_NOT_FOUND.getMessage()));
     }
 
     private Exercise createExerciseOrThrowIfAlreadyExists(ExerciseDto exerciseDto) {

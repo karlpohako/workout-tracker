@@ -23,7 +23,7 @@ class ExerciseController {
     private final ExerciseService exerciseService;
 
     @PostMapping("/exercise")
-    @Operation(summary = "Adds new exercise")
+    @Operation(summary = "Add new exercise", description = "Creates new exercise and adds it to database")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Creates new exercise and adds it to database"),
             @ApiResponse(responseCode = "400", description = "If exerciseDto is invalid",
@@ -49,7 +49,7 @@ class ExerciseController {
     }
 
     @GetMapping("/exercises")
-    @Operation(summary = "Finds all exercises")
+    @Operation(summary = "Finds all exercises", description = "Returns all exercises")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Returns all exercises")
     })
@@ -57,4 +57,16 @@ class ExerciseController {
         return exerciseService.findAllExercises();
     }
 
+    @PutMapping("/exercise/{exerciseId}")
+    @Operation(summary = "Updates exercise by id", description = "Updates exercise with given id, if dto fields are valid")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Updates exercise"),
+            @ApiResponse(description = "If exerciseDto is invalid", responseCode = "400",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(description = "If exercise, category, muscle group or equipment type is not found", responseCode = "404",
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    public void updateExercise(@PathVariable Integer exerciseId, @RequestBody @Valid ExerciseDto exerciseDto) {
+        exerciseService.updateExercise(exerciseId, exerciseDto);
+    }
 }

@@ -2,10 +2,7 @@ package ee.karl.workouttracker.presistence.exercise;
 
 import ee.karl.workouttracker.controller.exercise.dto.ExerciseDto;
 import ee.karl.workouttracker.controller.exercise.dto.ExerciseInfoDto;
-import org.mapstruct.InheritConfiguration;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -32,4 +29,8 @@ public interface ExerciseMapper {
     @Mapping(target = "muscleGroup", ignore = true)
     @Mapping(target = "equipmentType", ignore = true)
     Exercise toExercise(ExerciseDto exerciseDto);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @InheritConfiguration(name = "toExercise")
+    void updateExercise(ExerciseDto exerciseDto, @MappingTarget Exercise exercise);
 }
