@@ -35,15 +35,8 @@ public class ExerciseService {
     private final WorkoutExerciseRepository workoutExerciseRepository;
 
     public void addExercise(ExerciseDto exerciseDto) {
-        Category category = getCategoryOrThrow(exerciseDto.getCategory());
-        MuscleGroup muscleGroup = getMuscleGroupOrThrow(exerciseDto.getMuscleGroup());
-        EquipmentType equipmentType = getEquipmentTypeOrThrow(exerciseDto.getEquipmentType());
         Exercise exercise = createExerciseOrThrowIfAlreadyExists(exerciseDto);
-
-        exercise.setMuscleGroup(muscleGroup);
-        exercise.setCategory(category);
-        exercise.setEquipmentType(equipmentType);
-
+        mapRelationshipsFromDto(exerciseDto, exercise);
         exerciseRepository.save(exercise);
     }
 
@@ -58,47 +51,50 @@ public class ExerciseService {
     }
 
     public void updateExercise(Integer exerciseId, ExerciseDto exerciseDto) {
-        Exercise exercise = getExerciseByIdOrThrow(exerciseId);
-        Category category = getCategoryOrThrow(exerciseDto.getCategory());
-        MuscleGroup muscleGroup = getMuscleGroupOrThrow(exerciseDto.getMuscleGroup());
-        EquipmentType equipmentType = getEquipmentTypeOrThrow(exerciseDto.getEquipmentType());
-
-        exercise.setCategory(category);
-        exercise.setMuscleGroup(muscleGroup);
-        exercise.setEquipmentType(equipmentType);
+        Exercise exercise = getExerciseById(exerciseId);
+        mapRelationshipsFromDto(exerciseDto, exercise);
         exerciseMapper.updateExercise(exerciseDto, exercise);
         exerciseRepository.save(exercise);
     }
 
     @Transactional
     public void deleteExercise(Integer exerciseId) {
-        getExerciseByIdOrThrow(exerciseId);
-        isExerciseUsedInWorkouts(exerciseId);
+        getExerciseById(exerciseId);
+        assertNotUsedInWorkouts(exerciseId);
         exerciseRepository.deleteById(exerciseId);
     }
 
-    private void isExerciseUsedInWorkouts(Integer exerciseId) {
+    private void assertNotUsedInWorkouts(Integer exerciseId) {
         if (workoutExerciseRepository.isExerciseUsedInWorkoutBy(exerciseId)) {
             throw new DatabaseNameConflictException(Error.WORKOUT_EXERCISE_IN_USE.getMessage());
         }
     }
 
-    private Exercise getExerciseByIdOrThrow(Integer exerciseId) {
+    private Exercise getExerciseById(Integer exerciseId) {
         return exerciseRepository.findById(exerciseId)
                 .orElseThrow(() -> new DataNotFoundException(Error.EXERCISE_NOT_FOUND.getMessage()));
     }
 
-    private Category getCategoryOrThrow(String categoryName) {
+    private void mapRelationshipsFromDto(ExerciseDto exerciseDto, Exercise exercise) {
+        Category category = getCategory(exerciseDto.getCategory());
+        MuscleGroup muscleGroup = getMuscleGroup(exerciseDto.getMuscleGroup());
+        EquipmentType equipmentType = getEquipmentType(exerciseDto.getEquipmentType());
+        exercise.setCategory(category);
+        exercise.setMuscleGroup(muscleGroup);
+        exercise.setEquipmentType(equipmentType);
+    }
+
+    private Category getCategory(String categoryName) {
         return categoryRepository.findCategoryByName(categoryName)
                 .orElseThrow(() -> new DataNotFoundException(Error.CATEGORY_NOT_FOUND.getMessage()));
     }
 
-    private MuscleGroup getMuscleGroupOrThrow(String muscleGroupName) {
+    private MuscleGroup getMuscleGroup(String muscleGroupName) {
         return muscleGroupRepository.findMuscleGroupByName(muscleGroupName)
                 .orElseThrow(() -> new DataNotFoundException(Error.MUSCLE_GROUP_NOT_FOUND.getMessage()));
     }
 
-    private EquipmentType getEquipmentTypeOrThrow(String equipmentTypeName) {
+    private EquipmentType getEquipmentType(String equipmentTypeName) {
         return equipmentTypeRepository.findEquipmentTypeByName(equipmentTypeName)
                 .orElseThrow(() -> new DataNotFoundException(Error.EQUIPMENT_TYPE_NOT_FOUND.getMessage()));
     }

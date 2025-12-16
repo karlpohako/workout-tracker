@@ -75,7 +75,7 @@ class ExerciseController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Deletes exercise"),
             @ApiResponse(responseCode = "409", description = "Exercise is used in workout",
-            content = @Content(schema = @Schema(implementation = ApiError.class)))
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     public void deleteExercise(@PathVariable Integer exerciseId) {
         exerciseService.deleteExercise(exerciseId);
