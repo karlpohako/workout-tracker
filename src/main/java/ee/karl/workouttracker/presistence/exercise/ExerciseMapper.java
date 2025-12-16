@@ -21,7 +21,7 @@ public interface ExerciseMapper {
     @Mapping(target = "createdAt", source = "createdAt")
     ExerciseInfoDto toExerciseInfoDto(Exercise exercise);
 
-    List<ExerciseInfoDto> toExerciseInfoDtos(List<Exercise> all);
+    List<ExerciseInfoDto> toExerciseInfoDtos(List<Exercise> exercises);
 
     @Mapping(target = "name", source = "name")
     @Mapping(target = "description", source = "description")

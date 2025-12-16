@@ -1,6 +1,7 @@
 package ee.karl.workouttracker.controller.category;
 
 import ee.karl.workouttracker.controller.category.dto.CategoryDto;
+import ee.karl.workouttracker.controller.category.dto.CategoryInfo;
 import ee.karl.workouttracker.infrastructure.rest.error.ApiError;
 import ee.karl.workouttracker.service.category.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/")
@@ -30,6 +33,15 @@ public class CategoryController {
     })
     public CategoryDto findCategoryById(@PathVariable Integer categoryId) {
         return categoryService.findCategoryById(categoryId);
+    }
+
+    @GetMapping("/categories")
+    @Operation(summary = "Find all categories", description = "Returns all categories")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Returns all categories")
+    })
+    public List<CategoryInfo> findAllCategories() {
+        return categoryService.findAllCategories();
     }
 
 }
