@@ -5,7 +5,7 @@ import ee.karl.workouttracker.controller.exercise.dto.ExerciseInfoDto;
 import ee.karl.workouttracker.infrastructure.rest.error.Error;
 import ee.karl.workouttracker.infrastructure.rest.exception.DataNotFoundException;
 import ee.karl.workouttracker.infrastructure.rest.exception.DatabaseNameConflictException;
-import ee.karl.workouttracker.infrastructure.rest.exception.ExerciseInUseException;
+import ee.karl.workouttracker.infrastructure.rest.exception.DataInUseException;
 import ee.karl.workouttracker.presistence.category.Category;
 import ee.karl.workouttracker.presistence.category.CategoryRepository;
 import ee.karl.workouttracker.presistence.equipmenttype.EquipmentType;
@@ -58,15 +58,18 @@ public class ExerciseService {
     }
 
     public void deleteExercise(Integer exerciseId) {
-        getExerciseById(exerciseId);
-        assertNotUsedInWorkouts(exerciseId);
+        assertExistsAndNotUsedInWorkoutsBy(exerciseId);
         exerciseRepository.deleteById(exerciseId);
     }
 
-    private void assertNotUsedInWorkouts(Integer exerciseId) {
+    private void assertExistsAndNotUsedInWorkoutsBy(Integer exerciseId) {
+        boolean exerciseExists = exerciseRepository.existsById(exerciseId);
+        if (!exerciseExists) {
+            throw new DataNotFoundException(Error.EXERCISE_NOT_FOUND.getMessage());
+        }
         boolean exerciseInUse = workoutExerciseRepository.isExerciseUsedInWorkoutBy(exerciseId);
         if (exerciseInUse) {
-            throw new ExerciseInUseException(Error.WORKOUT_EXERCISE_IN_USE.getMessage());
+            throw new DataInUseException(Error.WORKOUT_EXERCISE_IN_USE.getMessage());
         }
     }
 

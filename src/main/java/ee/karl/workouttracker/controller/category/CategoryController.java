@@ -67,4 +67,17 @@ public class CategoryController {
     public void updateCategory(@PathVariable Integer categoryId, @RequestBody @Valid CategoryDto categoryDto) {
         categoryService.updateCategory(categoryId, categoryDto);
     }
+
+    @DeleteMapping("/{categoryId}")
+    @Operation(summary = "Delete category by id", description = "Deletes category with given id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Deletes category with given id"),
+            @ApiResponse(description = "If category with given id doesn't exist", responseCode = "404",
+            content = @Content(schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(description = "If category is used in workouts", responseCode = "409",
+            content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    public void deleteCategory(@PathVariable Integer categoryId) {
+        categoryService.deleteCategoryBy(categoryId);
+    }
 }
