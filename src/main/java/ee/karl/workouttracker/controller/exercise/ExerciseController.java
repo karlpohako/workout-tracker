@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/exercises")
+@RequestMapping("/exercise")
 @RequiredArgsConstructor
 class ExerciseController {
 
     private final ExerciseService exerciseService;
 
-    @PostMapping("/exercise")
+    @PostMapping("/create")
     @Operation(summary = "Add new exercise", description = "Creates new exercise and adds it to database")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Creates new exercise and adds it to database"),
@@ -37,7 +37,7 @@ class ExerciseController {
         exerciseService.saveExercise(exerciseDto);
     }
 
-    @GetMapping("/exercise/{exerciseId}")
+    @GetMapping("/{exerciseId}")
     @Operation(summary = "Finds exercise by id", description = "Returns exercise with given id, if exercise doesn't exist throws an error")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Returns exercise with given id"),
@@ -57,7 +57,7 @@ class ExerciseController {
         return exerciseService.findAllExercises();
     }
 
-    @PutMapping("/exercise/{exerciseId}")
+    @PutMapping("/{exerciseId}")
     @Operation(summary = "Updates exercise by id", description = "Updates exercise with given id, if dto fields are valid")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Updates exercise"),
@@ -70,7 +70,7 @@ class ExerciseController {
         exerciseService.updateExercise(exerciseId, exerciseDto);
     }
 
-    @DeleteMapping("/exercise/{exerciseId}")
+    @DeleteMapping("/{exerciseId}")
     @Operation(summary = "Deletes exercise by id", description = "Deletes exercise with given id if exercise is not used in workout")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Deletes exercise"),

@@ -16,16 +16,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("/category")
 @RequiredArgsConstructor
 public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @PostMapping("/category")
+    @PostMapping("/create")
     @Operation(summary = "Create new category", description = "Creates new category and adds it to database")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Creates new category and adds it to database"),
+            @ApiResponse(responseCode = "400", description = "If categoryDto is invalid",
+            content = @Content(schema = @Schema(implementation = ApiError.class))),
             @ApiResponse(responseCode = "409", description = "If category already exists",
                     content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
@@ -33,7 +35,7 @@ public class CategoryController {
         categoryService.saveCategory(categoryDto);
     }
 
-    @GetMapping("/category/{categoryId}")
+    @GetMapping("/{categoryId}")
     @Operation(summary = "Find category by id", description = "Returns category by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Returns category by id"),
@@ -53,4 +55,16 @@ public class CategoryController {
         return categoryService.findAllCategories();
     }
 
+    @PutMapping("/{categoryId}")
+    @Operation(summary = "Update category by id", description = "Updates category with given id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Updates category with given id"),
+            @ApiResponse(description = "If categoryDto is invalid", responseCode = "400",
+            content = @Content(schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(description = "If category with given id doesn't exist", responseCode = "404",
+            content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    public void updateCategory(@PathVariable Integer categoryId, @RequestBody @Valid CategoryDto categoryDto) {
+        categoryService.updateCategory(categoryId, categoryDto);
+    }
 }

@@ -2,9 +2,7 @@ package ee.karl.workouttracker.presistence.category;
 
 import ee.karl.workouttracker.controller.category.dto.CategoryDto;
 import ee.karl.workouttracker.controller.category.dto.CategoryInfo;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -22,4 +20,8 @@ public interface CategoryMapper {
 
     @Mapping(target = "name", source = "name")
     Category toCategory(CategoryDto categoryDto);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @InheritConfiguration(name = "toCategory")
+    void updateCategoryFromTo(CategoryDto categoryDto, @MappingTarget Category category);
 }

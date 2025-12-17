@@ -30,6 +30,12 @@ public class CategoryService {
         return categoryMapper.toCategoryDto(category);
     }
 
+    public void updateCategory(Integer categoryId, CategoryDto categoryDto) {
+        Category category = getCategoryBy(categoryId);
+        categoryMapper.updateCategoryFromTo(categoryDto, category);
+        categoryRepository.save(category);
+    }
+
     private Category getCategoryBy(Integer categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new DataNotFoundException(Error.CATEGORY_NOT_FOUND.getMessage()));
