@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/exercises")
 @RequiredArgsConstructor
 class ExerciseController {
 
@@ -34,7 +34,7 @@ class ExerciseController {
                     content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     public void addExercise(@RequestBody @Valid ExerciseDto exerciseDto) {
-        exerciseService.addExercise(exerciseDto);
+        exerciseService.saveExercise(exerciseDto);
     }
 
     @GetMapping("/exercise/{exerciseId}")

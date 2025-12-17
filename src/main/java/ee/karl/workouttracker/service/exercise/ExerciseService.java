@@ -5,6 +5,7 @@ import ee.karl.workouttracker.controller.exercise.dto.ExerciseInfoDto;
 import ee.karl.workouttracker.infrastructure.rest.error.Error;
 import ee.karl.workouttracker.infrastructure.rest.exception.DataNotFoundException;
 import ee.karl.workouttracker.infrastructure.rest.exception.DatabaseNameConflictException;
+import ee.karl.workouttracker.infrastructure.rest.exception.ExerciseInUseException;
 import ee.karl.workouttracker.presistence.category.Category;
 import ee.karl.workouttracker.presistence.category.CategoryRepository;
 import ee.karl.workouttracker.presistence.equipmenttype.EquipmentType;
@@ -15,7 +16,6 @@ import ee.karl.workouttracker.presistence.exercise.ExerciseRepository;
 import ee.karl.workouttracker.presistence.musclegroup.MuscleGroup;
 import ee.karl.workouttracker.presistence.musclegroup.MuscleGroupRepository;
 import ee.karl.workouttracker.presistence.workoutexercise.WorkoutExerciseRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,9 +34,9 @@ public class ExerciseService {
     private final EquipmentTypeRepository equipmentTypeRepository;
     private final WorkoutExerciseRepository workoutExerciseRepository;
 
-    public void addExercise(ExerciseDto exerciseDto) {
-        Exercise exercise = createExerciseOrThrowIfAlreadyExists(exerciseDto);
-        mapRelationshipsFromDto(exerciseDto, exercise);
+    public void saveExercise(ExerciseDto exerciseDto) {
+        Exercise exercise = createExercise(exerciseDto);
+        mapRelationshipsFromTo(exerciseDto, exercise);
         exerciseRepository.save(exercise);
     }
 
@@ -52,12 +52,11 @@ public class ExerciseService {
 
     public void updateExercise(Integer exerciseId, ExerciseDto exerciseDto) {
         Exercise exercise = getExerciseById(exerciseId);
-        mapRelationshipsFromDto(exerciseDto, exercise);
+        mapRelationshipsFromTo(exerciseDto, exercise);
         exerciseMapper.updateExercise(exerciseDto, exercise);
         exerciseRepository.save(exercise);
     }
 
-    @Transactional
     public void deleteExercise(Integer exerciseId) {
         getExerciseById(exerciseId);
         assertNotUsedInWorkouts(exerciseId);
@@ -65,8 +64,9 @@ public class ExerciseService {
     }
 
     private void assertNotUsedInWorkouts(Integer exerciseId) {
-        if (workoutExerciseRepository.isExerciseUsedInWorkoutBy(exerciseId)) {
-            throw new DatabaseNameConflictException(Error.WORKOUT_EXERCISE_IN_USE.getMessage());
+        boolean exerciseInUse = workoutExerciseRepository.isExerciseUsedInWorkoutBy(exerciseId);
+        if (exerciseInUse) {
+            throw new ExerciseInUseException(Error.WORKOUT_EXERCISE_IN_USE.getMessage());
         }
     }
 
@@ -75,7 +75,7 @@ public class ExerciseService {
                 .orElseThrow(() -> new DataNotFoundException(Error.EXERCISE_NOT_FOUND.getMessage()));
     }
 
-    private void mapRelationshipsFromDto(ExerciseDto exerciseDto, Exercise exercise) {
+    private void mapRelationshipsFromTo(ExerciseDto exerciseDto, Exercise exercise) {
         Category category = getCategory(exerciseDto.getCategory());
         MuscleGroup muscleGroup = getMuscleGroup(exerciseDto.getMuscleGroup());
         EquipmentType equipmentType = getEquipmentType(exerciseDto.getEquipmentType());
@@ -99,7 +99,7 @@ public class ExerciseService {
                 .orElseThrow(() -> new DataNotFoundException(Error.EQUIPMENT_TYPE_NOT_FOUND.getMessage()));
     }
 
-    private Exercise createExerciseOrThrowIfAlreadyExists(ExerciseDto exerciseDto) {
+    private Exercise createExercise(ExerciseDto exerciseDto) {
         String name = exerciseDto.getName();
         String category = exerciseDto.getCategory();
 

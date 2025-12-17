@@ -4,6 +4,7 @@ import ee.karl.workouttracker.controller.category.dto.CategoryDto;
 import ee.karl.workouttracker.controller.category.dto.CategoryInfo;
 import ee.karl.workouttracker.infrastructure.rest.error.Error;
 import ee.karl.workouttracker.infrastructure.rest.exception.DataNotFoundException;
+import ee.karl.workouttracker.infrastructure.rest.exception.DatabaseNameConflictException;
 import ee.karl.workouttracker.presistence.category.Category;
 import ee.karl.workouttracker.presistence.category.CategoryMapper;
 import ee.karl.workouttracker.presistence.category.CategoryRepository;
@@ -19,6 +20,11 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
 
+    public void saveCategory(CategoryDto categoryDto) {
+        Category category = createCategory(categoryDto);
+        categoryRepository.save(category);
+    }
+
     public CategoryDto findCategoryById(Integer categoryId) {
         Category category = getCategoryBy(categoryId);
         return categoryMapper.toCategoryDto(category);
@@ -32,5 +38,13 @@ public class CategoryService {
     public List<CategoryInfo> findAllCategories() {
         List<Category> categories = categoryRepository.findAll();
         return categoryMapper.toCategoryInfoDtos(categories);
+    }
+
+    private Category createCategory(CategoryDto categoryDto) {
+        boolean exists = categoryRepository.existsByName(categoryDto.getName());
+        if (exists) {
+            throw new DatabaseNameConflictException(Error.CATEGORY_ALREADY_EXISTS.getMessage());
+        }
+        return categoryMapper.toCategory(categoryDto);
     }
 }

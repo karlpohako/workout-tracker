@@ -11,6 +11,7 @@ public enum Error {
     EXERCISE_ALREADY_EXISTS("Exercise already exists"),
 
     CATEGORY_NOT_FOUND("Category not found"),
+    CATEGORY_ALREADY_EXISTS("Category already exists"),
 
     MUSCLE_GROUP_NOT_FOUND("Muscle group not found"),
 

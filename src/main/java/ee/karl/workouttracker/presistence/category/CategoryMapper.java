@@ -19,4 +19,7 @@ public interface CategoryMapper {
     CategoryInfo toCategoryInfoDto(Category category);
 
     List<CategoryInfo> toCategoryInfoDtos(List<Category> categories);
+
+    @Mapping(target = "name", source = "name")
+    Category toCategory(CategoryDto categoryDto);
 }
