@@ -9,4 +9,8 @@ public interface EquipmentTypeRepository extends JpaRepository<EquipmentType, In
 
     @Query("select e from EquipmentType e where upper(e.name) = upper(?1)")
     Optional<EquipmentType> findEquipmentTypeByName(String name);
+
+    @Query("select (count(e) > 0) from EquipmentType e where upper(e.name) = upper(?1)")
+    boolean existsByName(String name);
+
 }
