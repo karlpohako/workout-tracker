@@ -30,9 +30,14 @@ public class MuscleGroupService {
     }
 
     public MuscleGroupDto findMuscleGroupById(Integer muscleGroupId) {
-        MuscleGroup muscleGroup = muscleGroupRepository.findById(muscleGroupId).orElseThrow(
-                () -> new DataNotFoundException(Error.MUSCLE_GROUP_NOT_FOUND.getMessage()));
+        MuscleGroup muscleGroup = getMuscleGroup(muscleGroupId);
         return muscleGroupMapper.toDto(muscleGroup);
+    }
+
+    public void updateMuscleGroup(Integer muscleGroupId, MuscleGroupDto muscleGroupDto) {
+        MuscleGroup muscleGroup = getMuscleGroup(muscleGroupId);
+        muscleGroupMapper.updateMuscleGroup(muscleGroupDto, muscleGroup);
+        muscleGroupRepository.save(muscleGroup);
     }
 
     private MuscleGroup createMuscleGroup(MuscleGroupDto muscleGroupDto) {
@@ -42,5 +47,10 @@ public class MuscleGroupService {
             throw new DatabaseNameConflictException(Error.MUSCLE_GROUP_ALREADY_EXISTS.getMessage());
         }
         return muscleGroupMapper.toEntity(muscleGroupDto);
+    }
+
+    private MuscleGroup getMuscleGroup(Integer muscleGroupId) {
+        return muscleGroupRepository.findById(muscleGroupId).orElseThrow(
+                () -> new DataNotFoundException(Error.MUSCLE_GROUP_NOT_FOUND.getMessage()));
     }
 }

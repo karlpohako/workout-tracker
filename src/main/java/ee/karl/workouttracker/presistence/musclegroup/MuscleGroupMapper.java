@@ -22,5 +22,6 @@ public interface MuscleGroupMapper {
     List<MuscleGroupInfo> toInfoDtos(List<MuscleGroup> muscleGroups);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @InheritConfiguration(name = "toEntity")
     MuscleGroup updateMuscleGroup(MuscleGroupDto muscleGroupDto, @MappingTarget MuscleGroup muscleGroup);
 }

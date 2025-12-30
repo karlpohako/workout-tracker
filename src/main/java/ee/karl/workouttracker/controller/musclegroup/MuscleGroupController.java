@@ -54,4 +54,17 @@ public class MuscleGroupController {
     public MuscleGroupDto getMuscleGroupById(@PathVariable Integer muscleGroupId) {
         return muscleGroupService.findMuscleGroupById(muscleGroupId);
     }
+
+    @PutMapping("/{muscleGroupId}")
+    @Operation(summary = "Update muscle group by ID", description = "Update a muscle group by its id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Muscle group updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid muscle group information",
+                    content = @Content(schema = @Schema(implementation = Error.class))),
+            @ApiResponse(responseCode = "404", description = "Muscle group not found",
+                    content = @Content(schema = @Schema(implementation = Error.class)))
+    })
+    public void updateMuscleGroup(@PathVariable Integer muscleGroupId, @Valid @RequestBody MuscleGroupDto muscleGroupDto) {
+        muscleGroupService.updateMuscleGroup(muscleGroupId, muscleGroupDto);
+    }
 }
