@@ -9,4 +9,8 @@ public interface MuscleGroupRepository extends JpaRepository<MuscleGroup, Intege
 
     @Query("select m from MuscleGroup m where upper(m.name) = upper(?1)")
     Optional<MuscleGroup> findMuscleGroupByName(String name);
+
+    @Query("select (count(m) > 0) from MuscleGroup m where upper(m.name) = upper(?1)")
+    boolean muscleGroupExistsBy(String name);
+
 }
