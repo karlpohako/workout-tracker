@@ -3,11 +3,13 @@ package ee.karl.workouttracker.service.equipmenttype;
 import ee.karl.workouttracker.controller.equipmenttype.dto.EquipmentTypeDto;
 import ee.karl.workouttracker.controller.equipmenttype.dto.EquipmentTypeInfo;
 import ee.karl.workouttracker.infrastructure.rest.error.Error;
+import ee.karl.workouttracker.infrastructure.rest.exception.DataInUseException;
 import ee.karl.workouttracker.infrastructure.rest.exception.DataNotFoundException;
 import ee.karl.workouttracker.infrastructure.rest.exception.DatabaseNameConflictException;
 import ee.karl.workouttracker.presistence.equipmenttype.EquipmentType;
 import ee.karl.workouttracker.presistence.equipmenttype.EquipmentTypeMapper;
 import ee.karl.workouttracker.presistence.equipmenttype.EquipmentTypeRepository;
+import ee.karl.workouttracker.presistence.exercise.ExerciseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ public class EquipmentTypeService {
 
     private final EquipmentTypeRepository equipmentTypeRepository;
     private final EquipmentTypeMapper equipmentTypeMapper;
+    private final ExerciseRepository exerciseRepository;
 
     public void saveEquipmentType(EquipmentTypeDto equipmentTypeDto) {
         EquipmentType equipmentType = createEquipmentType(equipmentTypeDto);
@@ -41,6 +44,22 @@ public class EquipmentTypeService {
         equipmentTypeRepository.save(equipmentType);
     }
 
+    public void deleteEquipmentType(Integer equipmentTypeId) {
+        assertEquipmentTypeExistsAndNotInUse(equipmentTypeId);
+        equipmentTypeRepository.deleteById(equipmentTypeId);
+    }
+
+    private void assertEquipmentTypeExistsAndNotInUse(Integer equipmentTypeId) {
+        boolean equipmentTypeExists = equipmentTypeRepository.existsById(equipmentTypeId);
+        if (!equipmentTypeExists) {
+            throw new DataNotFoundException(Error.EQUIPMENT_TYPE_NOT_FOUND.getMessage());
+        }
+        boolean equipmentTypeUsedInExercise = exerciseRepository.isEquipmentTypeUsedInExerciseBy(equipmentTypeId);
+        if (equipmentTypeUsedInExercise) {
+            throw new DataInUseException(Error.EQUIPMENT_TYPE_IN_USE.getMessage());
+        }
+    }
+
     private EquipmentType createEquipmentType(EquipmentTypeDto equipmentTypeDto) {
         boolean exists = equipmentTypeRepository.existsByName(equipmentTypeDto.getName());
         if (exists) {
@@ -53,4 +72,5 @@ public class EquipmentTypeService {
         return equipmentTypeRepository.findById(equipmentTypeId).
                 orElseThrow(() -> new DataNotFoundException(Error.EQUIPMENT_TYPE_NOT_FOUND.getMessage()));
     }
+
 }

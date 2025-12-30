@@ -18,6 +18,7 @@ public enum Error {
 
     EQUIPMENT_TYPE_NOT_FOUND("Equipment type not found"),
     EQUIPMENT_TYPE_ALREADY_EXISTS("Equipment type already exists"),
+    EQUIPMENT_TYPE_IN_USE("Equipment type is used in exercises"),
 
     WORKOUT_EXERCISE_IN_USE("Exercise is used in workout");
 

@@ -67,4 +67,17 @@ public class EquipmentTypeController {
     public void updateEquipmentType(@PathVariable Integer equipmentTypeId, @RequestBody @Valid EquipmentTypeDto equipmentTypeDto) {
         equipmentTypeService.updateEquipmentType(equipmentTypeId, equipmentTypeDto);
     }
+
+    @DeleteMapping("/{equipmentTypeId}")
+    @Operation(summary = "Delete equipment type", description = "Deletes equipment type")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Equipment type deleted"),
+            @ApiResponse(responseCode = "404", description = "If equipment type with given id doesn't exist",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(responseCode = "409", description = "If equipment type is used in exercises",
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    public void deleteEquipmentType(@PathVariable Integer equipmentTypeId) {
+        equipmentTypeService.deleteEquipmentType(equipmentTypeId);
+    }
 }

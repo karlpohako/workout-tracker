@@ -11,4 +11,7 @@ public interface ExerciseRepository extends JpaRepository<Exercise, Integer> {
     @Query("select (count(e) > 0) from Exercise e where e.category.id = ?1")
     boolean isCategoryUsedInExercisesBy(Integer categoryId);
 
+    @Query("select (count(e) > 0) from Exercise e where e.equipmentType.id = ?1")
+    boolean isEquipmentTypeUsedInExerciseBy(Integer equipmentTypeId);
+
 }
