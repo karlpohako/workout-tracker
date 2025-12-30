@@ -54,4 +54,17 @@ public class EquipmentTypeController {
     public List<EquipmentTypeInfo> findAllEquipmentTypes() {
         return equipmentTypeService.findAllEquipmentTypes();
     }
+
+    @PutMapping("/{equipmentTypeId}")
+    @Operation(summary = "Update equipment type", description = "Updates equipment type")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Returns updated equipment type"),
+            @ApiResponse(description = "If equipmentTypeInfo is invalid", responseCode = "400",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(responseCode = "404", description = "If equipment type with given id doesn't exist",
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    public void updateEquipmentType(@PathVariable Integer equipmentTypeId, @RequestBody @Valid EquipmentTypeDto equipmentTypeDto) {
+        equipmentTypeService.updateEquipmentType(equipmentTypeId, equipmentTypeDto);
+    }
 }

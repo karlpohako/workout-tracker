@@ -35,6 +35,12 @@ public class EquipmentTypeService {
         return equipmentTypeMapper.toEquipmentTypeInfos(equipmentTypes);
     }
 
+    public void updateEquipmentType(Integer equipmentTypeId, EquipmentTypeDto equipmentTypeDto) {
+        EquipmentType equipmentType = getEquipmentType(equipmentTypeId);
+        equipmentTypeMapper.updateEquipmentType(equipmentTypeDto, equipmentType);
+        equipmentTypeRepository.save(equipmentType);
+    }
+
     private EquipmentType createEquipmentType(EquipmentTypeDto equipmentTypeDto) {
         boolean exists = equipmentTypeRepository.existsByName(equipmentTypeDto.getName());
         if (exists) {
