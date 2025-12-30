@@ -1,6 +1,10 @@
 package ee.karl.workouttracker.service.musclegroup;
 
+import ee.karl.workouttracker.controller.musclegroup.dto.MuscleGroupDto;
 import ee.karl.workouttracker.controller.musclegroup.dto.MuscleGroupInfo;
+import ee.karl.workouttracker.infrastructure.rest.error.Error;
+import ee.karl.workouttracker.infrastructure.rest.exception.DataNotFoundException;
+import ee.karl.workouttracker.presistence.musclegroup.MuscleGroup;
 import ee.karl.workouttracker.presistence.musclegroup.MuscleGroupMapper;
 import ee.karl.workouttracker.presistence.musclegroup.MuscleGroupRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,4 +23,9 @@ public class MuscleGroupService {
         return muscleGroupMapper.toInfoDtos(muscleGroupRepository.findAll());
     }
 
+    public MuscleGroupDto findMuscleGroupById(Integer muscleGroupId) {
+        MuscleGroup muscleGroup = muscleGroupRepository.findById(muscleGroupId).orElseThrow(
+                () -> new DataNotFoundException(Error.MUSCLE_GROUP_NOT_FOUND.getMessage()));
+        return muscleGroupMapper.toDto(muscleGroup);
+    }
 }
