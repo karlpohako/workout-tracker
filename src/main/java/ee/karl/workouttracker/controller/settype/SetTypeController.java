@@ -9,10 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,6 +19,18 @@ import java.util.List;
 public class SetTypeController {
 
     private final SetTypeService setTypeService;
+
+    @PostMapping("/create")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Creates new set type"),
+            @ApiResponse(responseCode = "400", description = "Invalid set type data",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(responseCode = "409", description = "Set type with same name already exists",
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))
+                    })
+    public void createSetType(@RequestBody SetTypeDto setTypeDto) {
+        setTypeService.saveSetType(setTypeDto);
+    }
 
     @GetMapping("/settypes")
     @ApiResponses(value = {

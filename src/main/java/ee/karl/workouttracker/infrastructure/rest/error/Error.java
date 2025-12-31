@@ -11,6 +11,7 @@ public enum Error {
     EXERCISE_ALREADY_EXISTS("Exercise already exists"),
 
     SET_TYPE_NOT_FOUND("Set type not found"),
+    SET_TYPE_ALREADY_EXISTS("Set type already exists"),
 
     CATEGORY_NOT_FOUND("Category not found"),
     CATEGORY_ALREADY_EXISTS("Category already exists"),
