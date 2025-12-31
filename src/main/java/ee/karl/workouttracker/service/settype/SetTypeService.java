@@ -34,6 +34,12 @@ public class SetTypeService {
         return setTypeMapper.toDto(setType);
     }
 
+    public void updateSetType(Integer setTypeId, SetTypeDto setTypeDto) {
+        SetType setType = getSetType(setTypeId);
+        setTypeMapper.updateSetType(setTypeDto, setType);
+        setTypeRepository.save(setType);
+    }
+
     private SetType getSetType(Integer setTypeId) {
         return setTypeRepository.findById(setTypeId).orElseThrow(
                 () -> new DataNotFoundException(Error.SET_TYPE_NOT_FOUND.getMessage())

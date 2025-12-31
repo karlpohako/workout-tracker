@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,7 @@ public class SetTypeController {
                     content = @Content(schema = @Schema(implementation = ApiError.class))),
             @ApiResponse(responseCode = "409", description = "Set type with same name already exists",
                     content = @Content(schema = @Schema(implementation = ApiError.class)))
-                    })
+    })
     public void createSetType(@RequestBody SetTypeDto setTypeDto) {
         setTypeService.saveSetType(setTypeDto);
     }
@@ -50,4 +51,15 @@ public class SetTypeController {
         return setTypeService.findSetTypeById(setTypeId);
     }
 
+    @PutMapping("/{setTypeId}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Set type updated"),
+            @ApiResponse(responseCode = "400", description = "Invalid set type data",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(responseCode = "404", description = "Set type not found",
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    public void updateSetType(@PathVariable Integer setTypeId, @Valid @RequestBody SetTypeDto setTypeDto) {
+        setTypeService.updateSetType(setTypeId, setTypeDto);
+    }
 }
