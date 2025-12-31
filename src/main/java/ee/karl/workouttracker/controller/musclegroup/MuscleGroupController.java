@@ -67,4 +67,17 @@ public class MuscleGroupController {
     public void updateMuscleGroup(@PathVariable Integer muscleGroupId, @Valid @RequestBody MuscleGroupDto muscleGroupDto) {
         muscleGroupService.updateMuscleGroup(muscleGroupId, muscleGroupDto);
     }
+
+    @DeleteMapping("/{muscleGroupId}")
+    @Operation(summary = "Delete muscle group by ID", description = "Delete a muscle group by its id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Muscle group deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Muscle group not found",
+                    content = @Content(schema = @Schema(implementation = Error.class))),
+            @ApiResponse(responseCode = "409", description = "Muscle group is used in exercises",
+                    content = @Content(schema = @Schema(implementation = Error.class)))
+    })
+    public void deleteMuscleGroup(@PathVariable Integer muscleGroupId) {
+        muscleGroupService.deleteMuscleGroup(muscleGroupId);
+    }
 }

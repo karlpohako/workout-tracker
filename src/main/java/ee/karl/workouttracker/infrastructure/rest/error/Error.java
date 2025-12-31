@@ -16,6 +16,7 @@ public enum Error {
 
     MUSCLE_GROUP_NOT_FOUND("Muscle group not found"),
     MUSCLE_GROUP_ALREADY_EXISTS("Muscle group already exists"),
+    MUSCLE_GROUP_IN_USE("Muscle group is used in exercises"),
 
     EQUIPMENT_TYPE_NOT_FOUND("Equipment type not found"),
     EQUIPMENT_TYPE_ALREADY_EXISTS("Equipment type already exists"),
