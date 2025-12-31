@@ -10,6 +10,8 @@ public enum Error {
     EXERCISE_NOT_FOUND("Exercise not found"),
     EXERCISE_ALREADY_EXISTS("Exercise already exists"),
 
+    SET_TYPE_NOT_FOUND("Set type not found"),
+
     CATEGORY_NOT_FOUND("Category not found"),
     CATEGORY_ALREADY_EXISTS("Category already exists"),
     CATEGORY_IN_USE("Category is used in exercises"),
