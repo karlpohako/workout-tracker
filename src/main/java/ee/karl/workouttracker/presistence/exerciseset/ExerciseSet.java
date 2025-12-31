@@ -1,5 +1,6 @@
 package ee.karl.workouttracker.presistence.exerciseset;
 
+import ee.karl.workouttracker.presistence.settype.SetType;
 import ee.karl.workouttracker.presistence.workoutexercise.WorkoutExercise;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -27,10 +28,10 @@ public class ExerciseSet {
     @JoinColumn(name = "WORKOUT_EXERCISE_ID", nullable = false)
     private WorkoutExercise workoutExercise;
 
-    @Size(max = 20)
     @NotNull
-    @Column(name = "SET_TYPE", nullable = false, length = 20)
-    private String setType;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "SET_TYPE_ID", nullable = false)
+    private SetType setType;
 
     @NotNull
     @Column(name = "SET_NUMBER", nullable = false)

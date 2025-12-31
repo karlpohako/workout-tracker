@@ -12,6 +12,7 @@ public enum Error {
 
     SET_TYPE_NOT_FOUND("Set type not found"),
     SET_TYPE_ALREADY_EXISTS("Set type already exists"),
+    SET_TYPE_IN_USE("Set type is used in exercises"),
 
     CATEGORY_NOT_FOUND("Category not found"),
     CATEGORY_ALREADY_EXISTS("Category already exists"),

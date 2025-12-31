@@ -5,6 +5,7 @@ import ee.karl.workouttracker.controller.settype.dto.SetTypeInfo;
 import ee.karl.workouttracker.infrastructure.rest.error.Error;
 import ee.karl.workouttracker.infrastructure.rest.exception.DataInUseException;
 import ee.karl.workouttracker.infrastructure.rest.exception.DataNotFoundException;
+import ee.karl.workouttracker.presistence.exerciseset.ExerciseSetRepository;
 import ee.karl.workouttracker.presistence.settype.SetType;
 import ee.karl.workouttracker.presistence.settype.SetTypeMapper;
 import ee.karl.workouttracker.presistence.settype.SetTypeRepository;
@@ -19,6 +20,7 @@ public class SetTypeService {
 
     private final SetTypeMapper setTypeMapper;
     private final SetTypeRepository setTypeRepository;
+    private final ExerciseSetRepository exerciseSetRepository;
 
     public void saveSetType(SetTypeDto setTypeDto) {
         SetType setType = createSetType(setTypeDto);
@@ -38,6 +40,22 @@ public class SetTypeService {
         SetType setType = getSetType(setTypeId);
         setTypeMapper.updateSetType(setTypeDto, setType);
         setTypeRepository.save(setType);
+    }
+
+    public void deleteSetType(Integer setTypeId) {
+        assertSetTypeExistsAndNotInUse(setTypeId);
+        setTypeRepository.deleteById(setTypeId);
+    }
+
+    private void assertSetTypeExistsAndNotInUse(Integer setTypeId) {
+        boolean exists = setTypeRepository.existsById(setTypeId);
+        boolean usedInExerciseSet = exerciseSetRepository.isSetTypeUsedInExerciseSetBy(setTypeId);
+        if (!exists) {
+            throw new DataNotFoundException(Error.SET_TYPE_NOT_FOUND.getMessage());
+        }
+        if (usedInExerciseSet) {
+            throw new DataInUseException(Error.SET_TYPE_IN_USE.getMessage());
+        }
     }
 
     private SetType getSetType(Integer setTypeId) {

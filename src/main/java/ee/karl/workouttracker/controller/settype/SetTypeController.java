@@ -62,4 +62,16 @@ public class SetTypeController {
     public void updateSetType(@PathVariable Integer setTypeId, @Valid @RequestBody SetTypeDto setTypeDto) {
         setTypeService.updateSetType(setTypeId, setTypeDto);
     }
+
+    @DeleteMapping("/{setTypeId}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Set type deleted"),
+            @ApiResponse(responseCode = "404", description = "Set type not found",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(responseCode = "409", description = "Set type is used in exercise sets",
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    public void deleteSetType(@PathVariable Integer setTypeId) {
+        setTypeService.deleteSetType(setTypeId);
+    }
 }
