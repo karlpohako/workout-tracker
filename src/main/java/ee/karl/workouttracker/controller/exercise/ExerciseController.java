@@ -61,9 +61,9 @@ class ExerciseController {
     @Operation(summary = "Updates exercise by id", description = "Updates exercise with given id, if dto fields are valid")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Updates exercise"),
-            @ApiResponse(description = "If exerciseDto is invalid", responseCode = "400",
+            @ApiResponse(responseCode = "400", description = "If exerciseDto is invalid",
                     content = @Content(schema = @Schema(implementation = ApiError.class))),
-            @ApiResponse(description = "If exercise, category, muscle group or equipment type is not found", responseCode = "404",
+            @ApiResponse(responseCode = "404", description = "If exercise, category, muscle group or equipment type is not found",
                     content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     public void updateExercise(@PathVariable Integer exerciseId, @RequestBody @Valid ExerciseDto exerciseDto) {

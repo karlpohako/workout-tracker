@@ -26,7 +26,10 @@ public enum Error {
     EQUIPMENT_TYPE_ALREADY_EXISTS("Equipment type already exists"),
     EQUIPMENT_TYPE_IN_USE("Equipment type is used in exercises"),
 
-    WORKOUT_EXERCISE_IN_USE("Exercise is used in workout");
+    WORKOUT_EXERCISE_IN_USE("Exercise is used in workout"),
+
+    USER_NOT_FOUND("User not found"),
+    USER_ALREADY_EXISTS("User already exists");
 
     private final String message;
 }

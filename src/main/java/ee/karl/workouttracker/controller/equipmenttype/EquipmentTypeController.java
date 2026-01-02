@@ -59,7 +59,7 @@ public class EquipmentTypeController {
     @Operation(summary = "Update equipment type", description = "Updates equipment type")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Returns updated equipment type"),
-            @ApiResponse(description = "If equipmentTypeInfo is invalid", responseCode = "400",
+            @ApiResponse(responseCode = "400", description = "If equipmentTypeInfo is invalid",
                     content = @Content(schema = @Schema(implementation = ApiError.class))),
             @ApiResponse(responseCode = "404", description = "If equipment type with given id doesn't exist",
                     content = @Content(schema = @Schema(implementation = ApiError.class)))

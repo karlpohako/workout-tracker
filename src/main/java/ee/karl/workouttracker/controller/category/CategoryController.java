@@ -27,7 +27,7 @@ public class CategoryController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Creates new category and adds it to database"),
             @ApiResponse(responseCode = "400", description = "If categoryDto is invalid",
-            content = @Content(schema = @Schema(implementation = ApiError.class))),
+                    content = @Content(schema = @Schema(implementation = ApiError.class))),
             @ApiResponse(responseCode = "409", description = "If category already exists",
                     content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
@@ -59,10 +59,10 @@ public class CategoryController {
     @Operation(summary = "Update category by id", description = "Updates category with given id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Updates category with given id"),
-            @ApiResponse(description = "If categoryDto is invalid", responseCode = "400",
-            content = @Content(schema = @Schema(implementation = ApiError.class))),
-            @ApiResponse(description = "If category with given id doesn't exist", responseCode = "404",
-            content = @Content(schema = @Schema(implementation = ApiError.class)))
+            @ApiResponse(responseCode = "400", description = "If categoryDto is invalid",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(responseCode = "404", description = "If category with given id doesn't exist",
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     public void updateCategory(@PathVariable Integer categoryId, @RequestBody @Valid CategoryDto categoryDto) {
         categoryService.updateCategory(categoryId, categoryDto);
@@ -72,10 +72,10 @@ public class CategoryController {
     @Operation(summary = "Delete category by id", description = "Deletes category with given id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Deletes category with given id"),
-            @ApiResponse(description = "If category with given id doesn't exist", responseCode = "404",
-            content = @Content(schema = @Schema(implementation = ApiError.class))),
-            @ApiResponse(description = "If category is used in workouts", responseCode = "409",
-            content = @Content(schema = @Schema(implementation = ApiError.class)))
+            @ApiResponse(responseCode = "404", description = "If category with given id doesn't exist",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(responseCode = "409", description = "If category is used in workouts",
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     public void deleteCategory(@PathVariable Integer categoryId) {
         categoryService.deleteCategoryBy(categoryId);
