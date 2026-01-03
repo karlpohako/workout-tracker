@@ -1,15 +1,20 @@
 package ee.karl.workouttracker.service.workout;
 
+import ee.karl.workouttracker.controller.workout.dto.CreateWorkoutDto;
 import ee.karl.workouttracker.controller.workout.dto.WorkoutDto;
 import ee.karl.workouttracker.controller.workout.dto.WorkoutInfo;
 import ee.karl.workouttracker.infrastructure.rest.error.Error;
 import ee.karl.workouttracker.infrastructure.rest.exception.DataNotFoundException;
+import ee.karl.workouttracker.presistence.user.User;
+import ee.karl.workouttracker.presistence.user.UserRepository;
 import ee.karl.workouttracker.presistence.workout.Workout;
 import ee.karl.workouttracker.presistence.workout.WorkoutMapper;
 import ee.karl.workouttracker.presistence.workout.WorkoutRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -18,6 +23,13 @@ public class WorkoutService {
 
     private final WorkoutRepository workoutRepository;
     private final WorkoutMapper workoutMapper;
+    private final UserRepository userRepository;
+
+    public void saveWorkout(Integer userId, CreateWorkoutDto createWorkoutDto) {
+        Workout workout = createWorkout(userId, createWorkoutDto);
+        workoutRepository.save(workout);
+
+    }
 
     public WorkoutDto findWorkoutById(Integer workoutId) {
         Workout workout = getWorkoutBy(workoutId);
@@ -29,9 +41,18 @@ public class WorkoutService {
         return workoutMapper.toWorkoutInfoDtos(workouts);
     }
 
+    private Workout createWorkout(Integer userId, CreateWorkoutDto createWorkoutDto) {
+        Workout workout = workoutMapper.createDtoToWorkout(createWorkoutDto);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new DataNotFoundException(Error.USER_NOT_FOUND.getMessage()));
+        workout.setUser(user);
+        workout.setDate(LocalDate.now());
+        workout.setStartTime(LocalTime.now());
+        return workout;
+    }
+
     private Workout getWorkoutBy(Integer workoutId) {
         return workoutRepository.findById(workoutId)
                 .orElseThrow(() -> new DataNotFoundException(Error.WORKOUT_NOT_FOUND.getMessage()));
     }
-
 }

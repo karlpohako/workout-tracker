@@ -1,5 +1,6 @@
 package ee.karl.workouttracker.presistence.workout;
 
+import ee.karl.workouttracker.controller.workout.dto.CreateWorkoutDto;
 import ee.karl.workouttracker.controller.workout.dto.WorkoutDto;
 import ee.karl.workouttracker.controller.workout.dto.WorkoutInfo;
 import org.mapstruct.*;
@@ -10,7 +11,7 @@ import java.util.List;
 public interface WorkoutMapper {
 
 
-    @Mapping(target = "user.id", source = "userId")
+    @Mapping(target = "user.id", ignore = true)
     @Mapping(target = "name", source = "name")
     @Mapping(target = "date", ignore = true)
     @Mapping(target = "startTime", ignore = true)
@@ -32,6 +33,10 @@ public interface WorkoutMapper {
     @Mapping(target = "id", source = "id")
     @Mapping(target = "createdAt", source = "createdAt")
     WorkoutInfo toWorkoutInfoDto(Workout workout);
+
+    @Mapping(target = "name", source = "name")
+    @Mapping(target = "notes", source = "notes")
+    Workout createDtoToWorkout(CreateWorkoutDto createWorkoutDto);
 
     List<WorkoutInfo> toWorkoutInfoDtos(List<Workout> workouts);
 
