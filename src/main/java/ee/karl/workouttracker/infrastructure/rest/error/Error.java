@@ -29,7 +29,9 @@ public enum Error {
     WORKOUT_EXERCISE_IN_USE("Exercise is used in workout"),
 
     USER_NOT_FOUND("User not found"),
-    USER_ALREADY_EXISTS("User already exists");
+    USER_ALREADY_EXISTS("User already exists"),
+
+    WORKOUT_NOT_FOUND("Workout not found");
 
     private final String message;
 }

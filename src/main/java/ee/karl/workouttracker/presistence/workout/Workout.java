@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -34,7 +35,7 @@ public class Workout {
     @Column(name = "NAME", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "date")
+    @Column(name = "\"date\"")
     private LocalDate date;
 
     @Column(name = "START_TIME")
@@ -50,7 +51,7 @@ public class Workout {
     @Column(name = "NOTES", length = 2000)
     private String notes;
 
-    @NotNull
+    @CreationTimestamp
     @Column(name = "CREATED_AT", nullable = false)
     private Instant createdAt;
 
