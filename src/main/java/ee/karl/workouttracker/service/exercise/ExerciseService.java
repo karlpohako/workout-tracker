@@ -69,7 +69,7 @@ public class ExerciseService {
         }
         boolean exerciseInUse = workoutExerciseRepository.isExerciseUsedInWorkoutBy(exerciseId);
         if (exerciseInUse) {
-            throw new DataInUseException(Error.WORKOUT_EXERCISE_IN_USE.getMessage());
+            throw new DataInUseException(Error.EXERCISE_IN_USE.getMessage());
         }
     }
 

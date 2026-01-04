@@ -9,6 +9,7 @@ public enum Error {
 
     EXERCISE_NOT_FOUND("Exercise not found"),
     EXERCISE_ALREADY_EXISTS("Exercise already exists"),
+    EXERCISE_IN_USE("Exercise is used in workout"),
 
     SET_TYPE_NOT_FOUND("Set type not found"),
     SET_TYPE_ALREADY_EXISTS("Set type already exists"),
@@ -26,7 +27,7 @@ public enum Error {
     EQUIPMENT_TYPE_ALREADY_EXISTS("Equipment type already exists"),
     EQUIPMENT_TYPE_IN_USE("Equipment type is used in exercises"),
 
-    WORKOUT_EXERCISE_IN_USE("Exercise is used in workout"),
+    WORKOUTEXERCISE_NOT_FOUND("Workout exercise not found"),
 
     USER_NOT_FOUND("User not found"),
     USER_ALREADY_EXISTS("User already exists"),
