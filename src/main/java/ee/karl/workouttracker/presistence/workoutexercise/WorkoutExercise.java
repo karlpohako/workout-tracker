@@ -4,6 +4,7 @@ import ee.karl.workouttracker.presistence.exercise.Exercise;
 import ee.karl.workouttracker.presistence.workout.Workout;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +33,7 @@ public class WorkoutExercise {
     private Exercise exercise;
 
     @NotNull
+    @Positive
     @Column(name = "ORDER_INDEX", nullable = false)
     private Integer orderIndex;
 

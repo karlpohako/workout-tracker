@@ -1,5 +1,6 @@
 package ee.karl.workouttracker.presistence.workoutexercise;
 
+import ee.karl.workouttracker.controller.workoutexercise.dto.WorkoutExerciseCreationDto;
 import ee.karl.workouttracker.controller.workoutexercise.dto.WorkoutExerciseDto;
 import ee.karl.workouttracker.controller.workoutexercise.dto.WorkoutExerciseInfo;
 import org.mapstruct.*;
@@ -26,6 +27,13 @@ public interface WorkoutExerciseMapper {
     WorkoutExerciseInfo toInfoDto(WorkoutExercise workoutExercise);
 
     List<WorkoutExerciseInfo> toInfoDtos(List<WorkoutExercise> workoutExercises);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "workout", ignore = true)
+    @Mapping(target = "exercise.id", ignore = true)
+    @Mapping(target = "orderIndex", ignore = true)
+    @Mapping(target = "notes", source = "notes")
+    WorkoutExercise creationToEntity(WorkoutExerciseCreationDto workoutExerciseCreationDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     WorkoutExercise partialUpdate(WorkoutExerciseDto workoutExerciseDto, @MappingTarget WorkoutExercise workoutExercise);
