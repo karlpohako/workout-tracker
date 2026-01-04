@@ -68,4 +68,15 @@ public class WorkoutController {
     public void updateWorkout(@PathVariable Integer workoutId, @Valid @RequestBody UpdateWorkoutDto updateWorkoutDto) {
         workoutService.updateWorkout(workoutId, updateWorkoutDto);
     }
+
+    @DeleteMapping("/{workoutId}")
+    @Operation(summary = "Delete workout by id", description = "Deletes workout by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Workout deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Workout with the specified ID not found",
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    public void deleteWorkout(@PathVariable Integer workoutId) {
+        workoutService.deleteWorkout(workoutId);
+    }
 }

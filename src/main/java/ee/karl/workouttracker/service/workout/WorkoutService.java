@@ -48,6 +48,17 @@ public class WorkoutService {
         workoutRepository.save(workout);
     }
 
+    public void deleteWorkout(Integer workoutId) {
+        doesWorkoutExist(workoutId);
+        workoutRepository.deleteById(workoutId);
+    }
+
+    private void doesWorkoutExist(Integer workoutId) {
+        if (!workoutRepository.existsById(workoutId)) {
+            throw new DataNotFoundException(Error.WORKOUT_NOT_FOUND.getMessage());
+        }
+    }
+
     private Workout createWorkout(Integer userId, CreateWorkoutDto createWorkoutDto) {
         Workout workout = workoutMapper.createDtoToWorkout(createWorkoutDto);
         User user = userRepository.findById(userId)
