@@ -1,6 +1,7 @@
 package ee.karl.workouttracker.service.workout;
 
 import ee.karl.workouttracker.controller.workout.dto.CreateWorkoutDto;
+import ee.karl.workouttracker.controller.workout.dto.UpdateWorkoutDto;
 import ee.karl.workouttracker.controller.workout.dto.WorkoutDto;
 import ee.karl.workouttracker.controller.workout.dto.WorkoutInfo;
 import ee.karl.workouttracker.infrastructure.rest.error.Error;
@@ -39,6 +40,12 @@ public class WorkoutService {
     public List<WorkoutInfo> findAllWorkouts() {
         List<Workout> workouts = workoutRepository.findAll();
         return workoutMapper.toWorkoutInfoDtos(workouts);
+    }
+
+    public void updateWorkout(Integer workoutId, UpdateWorkoutDto updateWorkoutDto) {
+        Workout workout = getWorkoutBy(workoutId);
+        workoutMapper.updateDtoToWorkout(updateWorkoutDto, workout);
+        workoutRepository.save(workout);
     }
 
     private Workout createWorkout(Integer userId, CreateWorkoutDto createWorkoutDto) {

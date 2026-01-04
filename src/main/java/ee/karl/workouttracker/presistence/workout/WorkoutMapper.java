@@ -1,6 +1,7 @@
 package ee.karl.workouttracker.presistence.workout;
 
 import ee.karl.workouttracker.controller.workout.dto.CreateWorkoutDto;
+import ee.karl.workouttracker.controller.workout.dto.UpdateWorkoutDto;
 import ee.karl.workouttracker.controller.workout.dto.WorkoutDto;
 import ee.karl.workouttracker.controller.workout.dto.WorkoutInfo;
 import org.mapstruct.*;
@@ -40,8 +41,8 @@ public interface WorkoutMapper {
 
     List<WorkoutInfo> toWorkoutInfoDtos(List<Workout> workouts);
 
-    @Mapping(target = "user.id", source = "userId")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    Workout updateWorkout(WorkoutDto workoutDto, @MappingTarget Workout workout);
-
+    @Mapping(target = "name", source = "name")
+    @Mapping(target = "notes", source = "notes")
+    void updateDtoToWorkout(UpdateWorkoutDto updateWorkoutDto, @MappingTarget Workout workout);
 }
