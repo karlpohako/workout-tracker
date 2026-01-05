@@ -1,5 +1,6 @@
 package ee.karl.workouttracker.presistence.exerciseset;
 
+import ee.karl.workouttracker.controller.exerciseset.dto.ExerciseSetCreation;
 import ee.karl.workouttracker.controller.exerciseset.dto.ExerciseSetDto;
 import ee.karl.workouttracker.controller.exerciseset.dto.ExerciseSetInfo;
 import org.mapstruct.*;
@@ -26,5 +27,12 @@ public interface ExerciseSetMapper {
     ExerciseSetInfo toInfo(ExerciseSet exerciseSet);
 
     List<ExerciseSetInfo> toInfoList(List<ExerciseSet> exerciseSets);
+
+    @Mapping(target = "weightKg", source = "weightKg")
+    @Mapping(target = "reps", source = "reps")
+    @Mapping(target = "rpe", source = "rpe")
+    @Mapping(target = "notes", source = "notes")
+    @Mapping(target = "completed", source = "completed")
+    ExerciseSet creationToEntity (ExerciseSetCreation creation);
 
 }

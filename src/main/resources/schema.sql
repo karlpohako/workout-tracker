@@ -39,7 +39,7 @@ CREATE TABLE exercise_set
     set_type_id         int                                             NOT NULL,
     set_number          int                                             NOT NULL,
     weight_kg           decimal(5, 2)                                   NULL,
-    reps                int                                             NOT NULL,
+    reps                int                                             NULL,
     rpe                 int                                             NULL,
     notes               longvarchar(2000)                               NULL,
     completed           boolean                                         NOT NULL,

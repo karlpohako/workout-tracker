@@ -40,7 +40,6 @@ public class ExerciseSet {
     @Column(name = "WEIGHT_KG", precision = 5, scale = 2)
     private BigDecimal weightKg;
 
-    @NotNull
     @Column(name = "REPS", nullable = false)
     private Integer reps;
 

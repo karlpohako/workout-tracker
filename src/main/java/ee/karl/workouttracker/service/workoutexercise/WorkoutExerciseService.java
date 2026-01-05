@@ -49,8 +49,10 @@ public class WorkoutExerciseService {
     @Transactional
     public void updateWorkoutExercise(Integer workoutExerciseId, WorkoutExerciseUpdateDto workoutExerciseDto) {
         WorkoutExercise workoutExercise = adjustOrderIndexOnUpdate(workoutExerciseId, workoutExerciseDto.getOrderIndex());
+
         workoutExerciseMapper.updateDtoToEntity(workoutExerciseDto, workoutExercise);
         updateExerciseIfChanged(workoutExerciseDto, workoutExercise);
+
         workoutExerciseRepository.save(workoutExercise);
 
     }
@@ -81,6 +83,7 @@ public class WorkoutExerciseService {
         Integer currentOrderIndex = workoutExercise.getOrderIndex();
         Integer newOrderIndex = requestOrderIndex;
         Integer maxIndex = workoutExerciseRepository.findWorkOutExerciseMaxOrderIndex(workoutExercise.getWorkout().getId());
+
         if (currentOrderIndex.equals(requestOrderIndex)) {
             return workoutExercise;
         }
@@ -93,18 +96,24 @@ public class WorkoutExerciseService {
             workoutExerciseRepository.shiftDownForMoveDown(workoutExercise.getWorkout().getId(), newOrderIndex, currentOrderIndex);
         }
         workoutExercise.setOrderIndex(newOrderIndex);
+
         return workoutExercise;
     }
 
     private WorkoutExercise createWorkoutExercise(Integer workoutId, WorkoutExerciseCreationDto workoutExerciseCreationDto) {
         Workout workout = getWorkout(workoutId);
         Exercise exercise = getExercise(workoutExerciseCreationDto.getExerciseId());
+
         Integer adjustedOrderIndex = adjustOrderIndexOnCreation(workoutId, workoutExerciseCreationDto.getOrderIndex());
+
         workoutExerciseRepository.shiftOrderIndexesOnCreation(workoutId, adjustedOrderIndex);
+
         WorkoutExercise workoutExercise = workoutExerciseMapper.creationToEntity(workoutExerciseCreationDto);
+
         workoutExercise.setWorkout(workout);
         workoutExercise.setExercise(exercise);
         workoutExercise.setOrderIndex(adjustedOrderIndex);
+
         return workoutExercise;
     }
 
@@ -116,6 +125,7 @@ public class WorkoutExerciseService {
         } else if (maxIndex == null) {
             requestOrderIndex = 1;
         }
+
         return requestOrderIndex;
     }
 

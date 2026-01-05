@@ -12,16 +12,10 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExerciseSetDto implements Serializable {
+public class ExerciseSetCreation implements Serializable {
 
-    String workoutExerciseWorkoutName;
-
-    Integer workoutExerciseOrderIndex;
-
-    String workoutExerciseExerciseName;
-
-    String setTypeName;
-
+    @NotNull
+    Integer setTypeId;
     @NotNull
     Integer setNumber;
 
