@@ -46,14 +46,25 @@ public class ExerciseSetService {
 
     @Transactional
     public void updateExerciseSet(Integer exerciseSetId, ExerciseSetUpdate exerciseSetUpdate) {
-        SetType setType = getSetType(exerciseSetUpdate.getSetTypeId());
         ExerciseSet exerciseSet = adjustSetNumberOnUpdate(exerciseSetId, exerciseSetUpdate.getSetNumber());
+        SetType setType = getSetType(exerciseSetUpdate.getSetTypeId());
 
         exerciseSetMapper.updateToEntity(exerciseSetUpdate, exerciseSet);
 
         exerciseSet.setSetType(setType);
 
         exerciseSetRepository.save(exerciseSet);
+    }
+
+    @Transactional
+    public void deleteExerciseSet(Integer exerciseSetId) {
+        ExerciseSet exerciseSet = getExerciseSet(exerciseSetId);
+        Integer workoutExerciseId = exerciseSet.getWorkoutExercise().getId();
+        Integer deletedSetNumber = exerciseSet.getSetNumber();
+
+        exerciseSetRepository.deleteById(exerciseSetId);
+
+        exerciseSetRepository.shiftSetNumbersAfterDeletion(workoutExerciseId, deletedSetNumber);
     }
 
     private ExerciseSet adjustSetNumberOnUpdate(Integer exerciseSetId, Integer requestSetNumber) {

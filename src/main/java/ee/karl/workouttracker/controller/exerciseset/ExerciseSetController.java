@@ -63,11 +63,27 @@ class ExerciseSetController {
     @Operation(summary = "Update exercise set", description = "Updates exercise set by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Exercise set updated"),
+            @ApiResponse(responseCode = "400", description = "Invalid exercise set update",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))),
             @ApiResponse(responseCode = "404", description = "Exercise set not found",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(responseCode = "404", description = "Set type not found",
                     content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     public void updateExerciseSet(@PathVariable Integer exerciseSetId, @Valid @RequestBody ExerciseSetUpdate exerciseSetUpdate) {
         exerciseSetService.updateExerciseSet(exerciseSetId, exerciseSetUpdate);
     }
+
+    @DeleteMapping("/{exerciseSetId}")
+    @Operation(summary = "Delete exercise set by id", description = "Deletes exercise set by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Exercise set deleted"),
+            @ApiResponse(responseCode = "404", description = "Exercise set not found",
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    public void deleteExerciseSet(@PathVariable Integer exerciseSetId) {
+        exerciseSetService.deleteExerciseSet(exerciseSetId);
+    }
+
 
 }

@@ -37,4 +37,10 @@ public interface ExerciseSetRepository extends JpaRepository<ExerciseSet, Intege
             "AND es.setNumber <= :rangeEnd")
     void shiftSetNumbersBackward(Integer workoutExerciseId, Integer rangeStart, Integer rangeEnd);
 
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE ExerciseSet es SET es.setNumber = es.setNumber - 1 " +
+            "WHERE es.workoutExercise.id = :workoutExerciseId " +
+            "AND es.setNumber > :deletedSetNumber")
+    void shiftSetNumbersAfterDeletion(@Param("workoutExerciseId") Integer workoutExerciseId,
+                                      @Param("deletedSetNumber") Integer deletedSetNumber);
 }
