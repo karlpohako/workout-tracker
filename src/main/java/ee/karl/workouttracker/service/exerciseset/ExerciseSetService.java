@@ -3,6 +3,7 @@ package ee.karl.workouttracker.service.exerciseset;
 import ee.karl.workouttracker.controller.exerciseset.dto.ExerciseSetCreation;
 import ee.karl.workouttracker.controller.exerciseset.dto.ExerciseSetDto;
 import ee.karl.workouttracker.controller.exerciseset.dto.ExerciseSetInfo;
+import ee.karl.workouttracker.controller.exerciseset.dto.ExerciseSetUpdate;
 import ee.karl.workouttracker.infrastructure.rest.error.Error;
 import ee.karl.workouttracker.infrastructure.rest.exception.DataNotFoundException;
 import ee.karl.workouttracker.presistence.exerciseset.ExerciseSet;
@@ -41,6 +42,47 @@ public class ExerciseSetService {
     public List<ExerciseSetInfo> findAllExerciseSets() {
         List<ExerciseSet> exerciseSets = exerciseSetRepository.findAll();
         return exerciseSetMapper.toInfoList(exerciseSets);
+    }
+
+    @Transactional
+    public void updateExerciseSet(Integer exerciseSetId, ExerciseSetUpdate exerciseSetUpdate) {
+        SetType setType = getSetType(exerciseSetUpdate.getSetTypeId());
+        ExerciseSet exerciseSet = adjustSetNumberOnUpdate(exerciseSetId, exerciseSetUpdate.getSetNumber());
+
+        exerciseSetMapper.updateToEntity(exerciseSetUpdate, exerciseSet);
+
+        exerciseSet.setSetType(setType);
+
+        exerciseSetRepository.save(exerciseSet);
+    }
+
+    private ExerciseSet adjustSetNumberOnUpdate(Integer exerciseSetId, Integer requestSetNumber) {
+        ExerciseSet exerciseSet = getExerciseSet(exerciseSetId);
+        Integer currentSetNumber = exerciseSet.getSetNumber();
+        Integer workoutExerciseId = exerciseSet.getWorkoutExercise().getId();
+
+        Integer maxSetNumber = exerciseSetRepository.findMaxSetNumberByWorkoutExerciseId(workoutExerciseId);
+        Integer targetSetNumber = Math.max(1, Math.min(maxSetNumber, requestSetNumber));
+
+        if (currentSetNumber.equals(targetSetNumber)) {
+            return exerciseSet;
+        }
+
+        shiftSetNumbersForReOrdering(workoutExerciseId, targetSetNumber, currentSetNumber);
+
+        exerciseSet.setSetNumber(targetSetNumber);
+
+        return exerciseSet;
+    }
+
+    private void shiftSetNumbersForReOrdering(Integer workoutExerciseId, Integer targetSetNumber, Integer currentSetNumber) {
+        if (targetSetNumber > currentSetNumber) {
+            // Moving set from position 2 to 5: shift sets 3,4,5 down to 2,3,4
+            exerciseSetRepository.shiftSetNumbersBackward(workoutExerciseId, currentSetNumber, targetSetNumber);
+        } else {
+            // Moving set from position 5 to 2: shift sets 2,3,4 up to 3,4,5
+            exerciseSetRepository.shiftSetNumbersForward(workoutExerciseId, targetSetNumber, currentSetNumber);
+        }
     }
 
     private ExerciseSet createExerciseSet(Integer workoutExerciseId, ExerciseSetCreation exerciseSetCreation) {

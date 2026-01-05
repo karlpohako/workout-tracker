@@ -3,6 +3,7 @@ package ee.karl.workouttracker.controller.exerciseset;
 import ee.karl.workouttracker.controller.exerciseset.dto.ExerciseSetCreation;
 import ee.karl.workouttracker.controller.exerciseset.dto.ExerciseSetDto;
 import ee.karl.workouttracker.controller.exerciseset.dto.ExerciseSetInfo;
+import ee.karl.workouttracker.controller.exerciseset.dto.ExerciseSetUpdate;
 import ee.karl.workouttracker.infrastructure.rest.error.ApiError;
 import ee.karl.workouttracker.service.exerciseset.ExerciseSetService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,15 +39,15 @@ class ExerciseSetController {
         exerciseSetService.saveExerciseSet(workoutExerciseId, exerciseSetCreation);
     }
 
-    @GetMapping("/{exerciseSet}")
+    @GetMapping("/{exerciseSetId}")
     @Operation(summary = "Get exercise set by id", description = "Returns exercise set by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Exercise set found"),
             @ApiResponse(responseCode = "404", description = "Exercise set not found",
                     content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
-    public ExerciseSetDto getExerciseSet(@PathVariable Integer exerciseSet) {
-        return exerciseSetService.findExerciseSetById(exerciseSet);
+    public ExerciseSetDto getExerciseSet(@PathVariable Integer exerciseSetId) {
+        return exerciseSetService.findExerciseSetById(exerciseSetId);
     }
 
     @GetMapping("/exercisesets")
@@ -56,6 +57,17 @@ class ExerciseSetController {
     })
     public List<ExerciseSetInfo> getAllExerciseSets() {
         return exerciseSetService.findAllExerciseSets();
+    }
+
+    @PutMapping("/{exerciseSetId}")
+    @Operation(summary = "Update exercise set", description = "Updates exercise set by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Exercise set updated"),
+            @ApiResponse(responseCode = "404", description = "Exercise set not found",
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    public void updateExerciseSet(@PathVariable Integer exerciseSetId, @Valid @RequestBody ExerciseSetUpdate exerciseSetUpdate) {
+        exerciseSetService.updateExerciseSet(exerciseSetId, exerciseSetUpdate);
     }
 
 }

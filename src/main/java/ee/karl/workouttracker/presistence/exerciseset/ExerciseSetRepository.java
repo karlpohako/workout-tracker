@@ -1,6 +1,5 @@
 package ee.karl.workouttracker.presistence.exerciseset;
 
-import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,11 +17,24 @@ public interface ExerciseSetRepository extends JpaRepository<ExerciseSet, Intege
     @Query("SELECT MAX(es.setNumber) FROM ExerciseSet es WHERE es.workoutExercise.id = :workoutExerciseId")
     Integer findMaxSetNumberByWorkoutExerciseId(@Param("workoutExerciseId") Integer workoutExerciseId);
 
-    @Transactional
     @Modifying(clearAutomatically = true)
     @Query("UPDATE ExerciseSet es SET es.setNumber = es.setNumber + 1 " +
             "WHERE es.workoutExercise.id = :workoutExerciseId AND es.setNumber >= :fromSetNumber")
     void shiftSetNumbersOnCreation(@Param("workoutExerciseId") Integer workoutExerciseId,
                                    @Param("fromSetNumber") Integer fromSetNumber);
+
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE ExerciseSet es SET es.setNumber = es.setNumber + 1 " +
+            "WHERE es.workoutExercise.id = :workoutExerciseId " +
+            "AND es.setNumber >= :rangeStart " +
+            "AND es.setNumber < :rangeEnd")
+    void shiftSetNumbersForward(Integer workoutExerciseId, Integer rangeStart, Integer rangeEnd);
+
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE ExerciseSet es SET es.setNumber = es.setNumber - 1 " +
+            "WHERE es.workoutExercise.id = :workoutExerciseId " +
+            "AND es.setNumber > :rangeStart " +
+            "AND es.setNumber <= :rangeEnd")
+    void shiftSetNumbersBackward(Integer workoutExerciseId, Integer rangeStart, Integer rangeEnd);
 
 }

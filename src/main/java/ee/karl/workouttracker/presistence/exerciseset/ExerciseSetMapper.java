@@ -3,6 +3,7 @@ package ee.karl.workouttracker.presistence.exerciseset;
 import ee.karl.workouttracker.controller.exerciseset.dto.ExerciseSetCreation;
 import ee.karl.workouttracker.controller.exerciseset.dto.ExerciseSetDto;
 import ee.karl.workouttracker.controller.exerciseset.dto.ExerciseSetInfo;
+import ee.karl.workouttracker.controller.exerciseset.dto.ExerciseSetUpdate;
 import org.mapstruct.*;
 
 import java.util.List;
@@ -34,5 +35,8 @@ public interface ExerciseSetMapper {
     @Mapping(target = "notes", source = "notes")
     @Mapping(target = "completed", source = "completed")
     ExerciseSet creationToEntity (ExerciseSetCreation creation);
+
+    @InheritConfiguration(name = "creationToEntity")
+    ExerciseSet updateToEntity(ExerciseSetUpdate update, @MappingTarget ExerciseSet exerciseSet);
 
 }

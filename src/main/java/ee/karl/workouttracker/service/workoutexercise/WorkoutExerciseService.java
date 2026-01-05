@@ -48,6 +48,7 @@ public class WorkoutExerciseService {
 
     @Transactional
     public void updateWorkoutExercise(Integer workoutExerciseId, WorkoutExerciseUpdateDto workoutExerciseDto) {
+        doesWorkoutExerciseExist(workoutExerciseId);
         WorkoutExercise workoutExercise = adjustOrderIndexOnUpdate(workoutExerciseId, workoutExerciseDto.getOrderIndex());
 
         workoutExerciseMapper.updateDtoToEntity(workoutExerciseDto, workoutExercise);
@@ -78,28 +79,33 @@ public class WorkoutExerciseService {
         }
     }
 
-    private WorkoutExercise adjustOrderIndexOnUpdate(Integer workoutExerciseId, Integer requestOrderIndex) {
+    private WorkoutExercise adjustOrderIndexOnUpdate(Integer workoutExerciseId, Integer requestedOrderIndex) {
         WorkoutExercise workoutExercise = getWorkoutExercise(workoutExerciseId);
         Integer currentOrderIndex = workoutExercise.getOrderIndex();
-        Integer newOrderIndex = requestOrderIndex;
-        Integer maxIndex = workoutExerciseRepository.findWorkOutExerciseMaxOrderIndex(workoutExercise.getWorkout().getId());
+        Integer workoutId = workoutExercise.getWorkout().getId();
 
-        if (currentOrderIndex.equals(requestOrderIndex)) {
+        Integer maxOrderIndex = workoutExerciseRepository.findWorkOutExerciseMaxOrderIndex(workoutId);
+        Integer targetOrderIndex = Math.max(1, Math.min(requestedOrderIndex, maxOrderIndex));
+
+        if (currentOrderIndex.equals(targetOrderIndex)) {
             return workoutExercise;
         }
-        if (newOrderIndex > maxIndex) {
-            newOrderIndex = maxIndex;
-        }
-        if (newOrderIndex > currentOrderIndex) {
-            workoutExerciseRepository.shiftUpForMoveUp(workoutExercise.getWorkout().getId(), currentOrderIndex, newOrderIndex);
-        } else {
-            workoutExerciseRepository.shiftDownForMoveDown(workoutExercise.getWorkout().getId(), newOrderIndex, currentOrderIndex);
-        }
-        workoutExercise.setOrderIndex(newOrderIndex);
 
+        shiftExercisesForReordering(workoutId, currentOrderIndex, targetOrderIndex);
+
+        workoutExercise.setOrderIndex(targetOrderIndex);
         return workoutExercise;
     }
 
+    private void shiftExercisesForReordering(Integer workoutId, Integer currentOrderIndex, Integer targetOrderIndex) {
+        if (targetOrderIndex > currentOrderIndex) {
+            // Moving exercise from position 2 to 5: shift exercises 3,4,5 down to 2,3,4
+            workoutExerciseRepository.decrementOrderIndexInRange(workoutId, currentOrderIndex, targetOrderIndex);
+        } else {
+            // Moving exercise from position 5 to 2: shift exercises 2,3,4 up to 3,4,5
+            workoutExerciseRepository.incrementOrderIndexInRange(workoutId, targetOrderIndex, currentOrderIndex);
+        }
+    }
     private WorkoutExercise createWorkoutExercise(Integer workoutId, WorkoutExerciseCreationDto workoutExerciseCreationDto) {
         Workout workout = getWorkout(workoutId);
         Exercise exercise = getExercise(workoutExerciseCreationDto.getExerciseId());

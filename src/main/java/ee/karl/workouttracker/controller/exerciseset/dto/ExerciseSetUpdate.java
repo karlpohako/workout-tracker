@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExerciseSetCreation implements Serializable {
+public class ExerciseSetUpdate implements Serializable {
 
     @NotNull
     Integer setTypeId;
