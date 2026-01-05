@@ -8,6 +8,7 @@ import ee.karl.workouttracker.infrastructure.rest.error.Error;
 import ee.karl.workouttracker.infrastructure.rest.exception.DataNotFoundException;
 import ee.karl.workouttracker.presistence.exercise.Exercise;
 import ee.karl.workouttracker.presistence.exercise.ExerciseRepository;
+import ee.karl.workouttracker.presistence.exerciseset.ExerciseSetRepository;
 import ee.karl.workouttracker.presistence.workout.Workout;
 import ee.karl.workouttracker.presistence.workout.WorkoutRepository;
 import ee.karl.workouttracker.presistence.workoutexercise.WorkoutExercise;
@@ -27,6 +28,7 @@ public class WorkoutExerciseService {
     private final WorkoutExerciseRepository workoutExerciseRepository;
     private final WorkoutRepository workoutRepository;
     private final ExerciseRepository exerciseRepository;
+    private final ExerciseSetRepository exerciseSetRepository;
 
     @Transactional
     public void saveWorkoutExercise(Integer workoutId, WorkoutExerciseCreationDto workoutExerciseCreationDto) {
@@ -48,10 +50,18 @@ public class WorkoutExerciseService {
     public void updateWorkoutExercise(Integer workoutExerciseId, WorkoutExerciseUpdateDto workoutExerciseDto) {
         WorkoutExercise workoutExercise = adjustOrderIndexOnUpdate(workoutExerciseId, workoutExerciseDto.getOrderIndex());
         workoutExerciseMapper.updateDtoToEntity(workoutExerciseDto, workoutExercise);
-        Exercise exercise = getExercise(workoutExerciseDto.getExerciseId());
-        workoutExercise.setExercise(exercise);
+        updateExerciseIfChanged(workoutExerciseDto, workoutExercise);
         workoutExerciseRepository.save(workoutExercise);
 
+    }
+
+    private void updateExerciseIfChanged(WorkoutExerciseUpdateDto workoutExerciseDto, WorkoutExercise workoutExercise) {
+        boolean exerciseStaysSame = workoutExercise.getExercise().getId().equals(workoutExerciseDto.getExerciseId());
+        if (!exerciseStaysSame) {
+            exerciseSetRepository.deleteAllByWorkoutExerciseId(workoutExercise.getId());
+            Exercise exercise = getExercise(workoutExerciseDto.getExerciseId());
+            workoutExercise.setExercise(exercise);
+        }
     }
 
     private WorkoutExercise adjustOrderIndexOnUpdate(Integer workoutExerciseId, Integer requestOrderIndex) {

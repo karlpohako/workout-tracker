@@ -11,6 +11,7 @@ import ee.karl.workouttracker.presistence.user.UserRepository;
 import ee.karl.workouttracker.presistence.workout.Workout;
 import ee.karl.workouttracker.presistence.workout.WorkoutMapper;
 import ee.karl.workouttracker.presistence.workout.WorkoutRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +49,7 @@ public class WorkoutService {
         workoutRepository.save(workout);
     }
 
+    @Transactional
     public void deleteWorkout(Integer workoutId) {
         doesWorkoutExist(workoutId);
         workoutRepository.deleteById(workoutId);

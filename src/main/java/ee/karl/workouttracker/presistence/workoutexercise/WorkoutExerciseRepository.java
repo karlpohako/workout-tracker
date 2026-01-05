@@ -1,5 +1,6 @@
 package ee.karl.workouttracker.presistence.workoutexercise;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -7,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface WorkoutExerciseRepository extends JpaRepository<WorkoutExercise, Integer> {
 
+    @Transactional
     @Modifying(clearAutomatically = true)
     @Query("UPDATE WorkoutExercise we SET we.orderIndex = we.orderIndex + 1 " +
             "WHERE we.workout.id = :workoutId " +
@@ -16,6 +18,7 @@ public interface WorkoutExerciseRepository extends JpaRepository<WorkoutExercise
                               @Param("newIndex") Integer newIndex,
                               @Param("oldIndex") Integer oldIndex);
 
+    @Transactional
     @Modifying(clearAutomatically = true)
     @Query("UPDATE WorkoutExercise we SET we.orderIndex = we.orderIndex - 1 " +
             "WHERE we.workout.id = :workoutId " +
@@ -28,6 +31,7 @@ public interface WorkoutExerciseRepository extends JpaRepository<WorkoutExercise
     @Query("select max(we.orderIndex) from WorkoutExercise we where we.workout.id = ?1")
     Integer findWorkOutExerciseMaxOrderIndex(Integer workoutId);
 
+    @Transactional
     @Modifying(clearAutomatically = true)
     @Query("UPDATE WorkoutExercise we SET we.orderIndex = we.orderIndex + 1 " +
             "WHERE we.workout.id = :workoutId AND we.orderIndex >= :fromIndex")

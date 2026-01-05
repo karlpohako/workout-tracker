@@ -7,6 +7,7 @@ import ee.karl.workouttracker.infrastructure.rest.exception.DatabaseNameConflict
 import ee.karl.workouttracker.presistence.user.User;
 import ee.karl.workouttracker.presistence.user.UserMapper;
 import ee.karl.workouttracker.presistence.user.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -40,12 +41,14 @@ public class UserService {
         userRepository.save(user);
 
     }
+
     public void updateUserPassword(Integer userId, PasswordUpdateDto passwordUpdateDto) {
         User user = getUserBy(userId);
         userMapper.passwordUpdate(passwordUpdateDto, user);
         userRepository.save(user);
     }
 
+    @Transactional
     public void deleteUser(Integer userId) {
         if (!userRepository.existsById(userId)) {
             throw new DataNotFoundException(Error.USER_NOT_FOUND.getMessage());
