@@ -18,6 +18,8 @@ public class ExerciseSetDto implements Serializable {
 
     Integer workoutExerciseOrderIndex;
 
+    String workoutExerciseExerciseName;
+
     String setTypeName;
 
     @NotNull

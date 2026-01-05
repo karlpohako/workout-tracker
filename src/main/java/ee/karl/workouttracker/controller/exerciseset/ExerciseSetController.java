@@ -1,6 +1,7 @@
 package ee.karl.workouttracker.controller.exerciseset;
 
 import ee.karl.workouttracker.controller.exerciseset.dto.ExerciseSetDto;
+import ee.karl.workouttracker.controller.exerciseset.dto.ExerciseSetInfo;
 import ee.karl.workouttracker.infrastructure.rest.error.ApiError;
 import ee.karl.workouttracker.service.exerciseset.ExerciseSetService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/exerciseset")
 @RequiredArgsConstructor
@@ -26,10 +29,19 @@ class ExerciseSetController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Exercise set found"),
             @ApiResponse(responseCode = "404", description = "Exercise set not found",
-            content = @Content (schema = @Schema(implementation = ApiError.class)))
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     public ExerciseSetDto getExerciseSet(@PathVariable Integer exerciseSet) {
-       return exerciseSetService.findExerciseSetById(exerciseSet);
+        return exerciseSetService.findExerciseSetById(exerciseSet);
+    }
+
+    @GetMapping("/exercisesets")
+    @Operation(summary = "Get all exercise sets", description = "Returns all exercise sets")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Exercise sets found")
+    })
+    public List<ExerciseSetInfo> getAllExerciseSets() {
+        return exerciseSetService.findAllExerciseSets();
     }
 
 }
