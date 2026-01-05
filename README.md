@@ -1,4 +1,4 @@
-# Workout Tracker
+# Workout Tracker - WIP
 
 A Spring Boot application for tracking strength training workouts, exercises, sets, and progress.
 

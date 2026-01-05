@@ -38,7 +38,6 @@ public class WorkoutExercise {
     private Integer orderIndex;
 
     @Size(max = 2000)
-    @NotNull
     @Column(name = "NOTES", nullable = false, length = 2000)
     private String notes;
 

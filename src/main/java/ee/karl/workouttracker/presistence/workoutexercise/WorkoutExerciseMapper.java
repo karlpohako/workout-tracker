@@ -3,18 +3,13 @@ package ee.karl.workouttracker.presistence.workoutexercise;
 import ee.karl.workouttracker.controller.workoutexercise.dto.WorkoutExerciseCreationDto;
 import ee.karl.workouttracker.controller.workoutexercise.dto.WorkoutExerciseDto;
 import ee.karl.workouttracker.controller.workoutexercise.dto.WorkoutExerciseInfo;
+import ee.karl.workouttracker.controller.workoutexercise.dto.WorkoutExerciseUpdateDto;
 import org.mapstruct.*;
 
 import java.util.List;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface WorkoutExerciseMapper {
-
-    @Mapping(target = "workout.id", source = "workoutId")
-    @Mapping(target = "exercise.id", source = "exerciseId")
-    @Mapping(target = "orderIndex", source = "orderIndex")
-    @Mapping(target = "notes", source = "notes")
-    WorkoutExercise toEntity(WorkoutExerciseDto workoutExerciseDto);
 
     @Mapping(target = "workoutId", source = "workout.id")
     @Mapping(target = "exerciseId", source = "exercise.id")
@@ -36,5 +31,10 @@ public interface WorkoutExerciseMapper {
     WorkoutExercise creationToEntity(WorkoutExerciseCreationDto workoutExerciseCreationDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    WorkoutExercise partialUpdate(WorkoutExerciseDto workoutExerciseDto, @MappingTarget WorkoutExercise workoutExercise);
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "workout", ignore = true)
+    @Mapping(target = "exercise.id", ignore = true)
+    @Mapping(target = "orderIndex", ignore = true)
+    @Mapping(target = "notes", source = "notes")
+    WorkoutExercise updateDtoToEntity(WorkoutExerciseUpdateDto workoutExerciseUpdateDto, @MappingTarget WorkoutExercise workoutExercise);
 }

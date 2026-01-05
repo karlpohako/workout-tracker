@@ -3,6 +3,7 @@ package ee.karl.workouttracker.service.workoutexercise;
 import ee.karl.workouttracker.controller.workoutexercise.dto.WorkoutExerciseCreationDto;
 import ee.karl.workouttracker.controller.workoutexercise.dto.WorkoutExerciseDto;
 import ee.karl.workouttracker.controller.workoutexercise.dto.WorkoutExerciseInfo;
+import ee.karl.workouttracker.controller.workoutexercise.dto.WorkoutExerciseUpdateDto;
 import ee.karl.workouttracker.infrastructure.rest.error.Error;
 import ee.karl.workouttracker.infrastructure.rest.exception.DataNotFoundException;
 import ee.karl.workouttracker.presistence.exercise.Exercise;
@@ -27,6 +28,13 @@ public class WorkoutExerciseService {
     private final WorkoutRepository workoutRepository;
     private final ExerciseRepository exerciseRepository;
 
+    @Transactional
+    public void saveWorkoutExercise(Integer workoutId, WorkoutExerciseCreationDto workoutExerciseCreationDto) {
+        WorkoutExercise workoutExercise = createWorkoutExercise(workoutId, workoutExerciseCreationDto);
+        workoutExerciseRepository.save(workoutExercise);
+
+    }
+
     public List<WorkoutExerciseInfo> findAllWorkoutExercises() {
         return workoutExerciseMapper.toInfoDtos(workoutExerciseRepository.findAll());
     }
@@ -37,17 +45,40 @@ public class WorkoutExerciseService {
     }
 
     @Transactional
-    public void saveWorkoutExercise(Integer workoutId, WorkoutExerciseCreationDto workoutExerciseCreationDto) {
-        WorkoutExercise workoutExercise = createWorkoutExercise(workoutId, workoutExerciseCreationDto);
+    public void updateWorkoutExercise(Integer workoutExerciseId, WorkoutExerciseUpdateDto workoutExerciseDto) {
+        WorkoutExercise workoutExercise = adjustOrderIndexOnUpdate(workoutExerciseId, workoutExerciseDto.getOrderIndex());
+        workoutExerciseMapper.updateDtoToEntity(workoutExerciseDto, workoutExercise);
+        Exercise exercise = getExercise(workoutExerciseDto.getExerciseId());
+        workoutExercise.setExercise(exercise);
         workoutExerciseRepository.save(workoutExercise);
 
     }
 
+    private WorkoutExercise adjustOrderIndexOnUpdate(Integer workoutExerciseId, Integer requestOrderIndex) {
+        WorkoutExercise workoutExercise = getWorkoutExercise(workoutExerciseId);
+        Integer currentOrderIndex = workoutExercise.getOrderIndex();
+        Integer newOrderIndex = requestOrderIndex;
+        Integer maxIndex = workoutExerciseRepository.findWorkOutExerciseMaxOrderIndex(workoutExercise.getWorkout().getId());
+        if (currentOrderIndex.equals(requestOrderIndex)) {
+            return workoutExercise;
+        }
+        if (newOrderIndex > maxIndex) {
+            newOrderIndex = maxIndex;
+        }
+        if (newOrderIndex > currentOrderIndex) {
+            workoutExerciseRepository.shiftUpForMoveUp(workoutExercise.getWorkout().getId(), currentOrderIndex, newOrderIndex);
+        } else {
+            workoutExerciseRepository.shiftDownForMoveDown(workoutExercise.getWorkout().getId(), newOrderIndex, currentOrderIndex);
+        }
+        workoutExercise.setOrderIndex(newOrderIndex);
+        return workoutExercise;
+    }
+
     private WorkoutExercise createWorkoutExercise(Integer workoutId, WorkoutExerciseCreationDto workoutExerciseCreationDto) {
         Workout workout = getWorkout(workoutId);
-        Exercise exercise = getExercise(workoutExerciseCreationDto);
-        Integer adjustedOrderIndex = adjustOrderIndex(workoutId, workoutExerciseCreationDto);
-        workoutExerciseRepository.shiftOrderIndexes(workoutId, adjustedOrderIndex);
+        Exercise exercise = getExercise(workoutExerciseCreationDto.getExerciseId());
+        Integer adjustedOrderIndex = adjustOrderIndexOnCreation(workoutId, workoutExerciseCreationDto.getOrderIndex());
+        workoutExerciseRepository.shiftOrderIndexesOnCreation(workoutId, adjustedOrderIndex);
         WorkoutExercise workoutExercise = workoutExerciseMapper.creationToEntity(workoutExerciseCreationDto);
         workoutExercise.setWorkout(workout);
         workoutExercise.setExercise(exercise);
@@ -55,9 +86,8 @@ public class WorkoutExerciseService {
         return workoutExercise;
     }
 
-    private Integer adjustOrderIndex(Integer workoutId, WorkoutExerciseCreationDto workoutExerciseCreationDto) {
+    private Integer adjustOrderIndexOnCreation(Integer workoutId, Integer requestOrderIndex) {
         Integer maxIndex = workoutExerciseRepository.findWorkOutExerciseMaxOrderIndex(workoutId);
-        Integer requestOrderIndex = workoutExerciseCreationDto.getOrderIndex();
 
         if (maxIndex != null && requestOrderIndex > maxIndex + 1) {
             requestOrderIndex = maxIndex + 1;
@@ -67,8 +97,8 @@ public class WorkoutExerciseService {
         return requestOrderIndex;
     }
 
-    private Exercise getExercise(WorkoutExerciseCreationDto workoutExerciseCreationDto) {
-        return exerciseRepository.findById(workoutExerciseCreationDto.getExerciseId()).orElseThrow(
+    private Exercise getExercise(Integer exerciseId) {
+        return exerciseRepository.findById(exerciseId).orElseThrow(
                 () -> new DataNotFoundException(Error.EXERCISE_NOT_FOUND.getMessage())
         );
     }
