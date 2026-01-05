@@ -55,6 +55,18 @@ public class WorkoutExerciseService {
 
     }
 
+    @Transactional
+    public void deleteWorkoutExercise(Integer workoutExerciseId) {
+        doesWorkoutExerciseExist(workoutExerciseId);
+        workoutExerciseRepository.deleteById(workoutExerciseId);
+    }
+
+    private void doesWorkoutExerciseExist(Integer workoutExerciseId) {
+        if (!workoutExerciseRepository.existsById(workoutExerciseId)) {
+            throw new DataNotFoundException(Error.WORKOUTEXERCISE_NOT_FOUND.getMessage());
+        }
+    }
+
     private void updateExerciseIfChanged(WorkoutExerciseUpdateDto workoutExerciseDto, WorkoutExercise workoutExercise) {
         boolean exerciseStaysSame = workoutExercise.getExercise().getId().equals(workoutExerciseDto.getExerciseId());
         if (!exerciseStaysSame) {

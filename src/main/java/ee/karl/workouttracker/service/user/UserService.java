@@ -50,10 +50,14 @@ public class UserService {
 
     @Transactional
     public void deleteUser(Integer userId) {
+        doesUserExist(userId);
+        userRepository.deleteById(userId);
+    }
+
+    private void doesUserExist(Integer userId) {
         if (!userRepository.existsById(userId)) {
             throw new DataNotFoundException(Error.USER_NOT_FOUND.getMessage());
         }
-        userRepository.deleteById(userId);
     }
 
     private User getUserBy(Integer userId) {
