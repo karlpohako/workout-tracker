@@ -3,18 +3,16 @@ package ee.karl.workouttracker.controller.workout.dto;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
 public class WorkoutDto implements Serializable {
 
     @NotNull

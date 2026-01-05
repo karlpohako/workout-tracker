@@ -11,6 +11,8 @@ public enum Error {
     EXERCISE_ALREADY_EXISTS("Exercise already exists"),
     EXERCISE_IN_USE("Exercise is used in workout"),
 
+    EXERCISESET_NOT_FOUND("Exercise set not found"),
+
     SET_TYPE_NOT_FOUND("Set type not found"),
     SET_TYPE_ALREADY_EXISTS("Set type already exists"),
     SET_TYPE_IN_USE("Set type is used in exercises"),

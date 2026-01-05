@@ -1,14 +1,15 @@
 package ee.karl.workouttracker.controller.musclegroup.dto;
 
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 public class MuscleGroupInfo extends MuscleGroupDto implements Serializable {
 

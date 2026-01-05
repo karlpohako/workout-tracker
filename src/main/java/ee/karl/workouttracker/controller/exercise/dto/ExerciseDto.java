@@ -3,14 +3,12 @@ package ee.karl.workouttracker.controller.exercise.dto;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
-@Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
 public class ExerciseDto {
 
     @NotNull
