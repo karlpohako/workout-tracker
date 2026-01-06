@@ -29,6 +29,7 @@ public class WorkoutService {
     private final UserRepository userRepository;
 
     public void saveWorkout(Integer userId, CreateWorkoutDto createWorkoutDto) {
+        doesUserExist(userId);
         Workout workout = createWorkout(userId, createWorkoutDto);
         workoutRepository.save(workout);
 
@@ -41,6 +42,12 @@ public class WorkoutService {
 
     public List<WorkoutInfo> findAllWorkouts() {
         List<Workout> workouts = workoutRepository.findAll();
+        return workoutMapper.toWorkoutInfoDtos(workouts);
+    }
+
+    public List<WorkoutInfo> findAllWorkoutsByUserId(Integer userId) {
+        doesUserExist(userId);
+        List<Workout> workouts = workoutRepository.findAllByUserId(userId);
         return workoutMapper.toWorkoutInfoDtos(workouts);
     }
 
@@ -68,6 +75,12 @@ public class WorkoutService {
         workout.setEndTime(LocalTime.now());
         Duration duration = Duration.between(workout.getStartTime(), workout.getEndTime());
         return (int) duration.toMinutes();
+    }
+
+    private void doesUserExist(Integer userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new DataNotFoundException(Error.USER_NOT_FOUND.getMessage());
+        }
     }
 
     private void doesWorkoutExist(Integer workoutId) {

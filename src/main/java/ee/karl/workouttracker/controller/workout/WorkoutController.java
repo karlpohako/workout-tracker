@@ -57,6 +57,15 @@ public class WorkoutController {
         return workoutService.findAllWorkouts();
     }
 
+    @GetMapping("/{userId}/workouts")
+    @Operation(summary = "Find all workouts for user", description = "Returns all workouts for user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Workouts retrieved successfully")
+    })
+    public List<WorkoutInfo> findAllWorkoutsByUserId(@PathVariable Integer userId) {
+        return workoutService.findAllWorkoutsByUserId(userId);
+    }
+
     @PutMapping("/{workoutId}")
     @Operation(summary = "Update workout by id", description = "Updates workout by id")
     @ApiResponses(value = {

@@ -14,10 +14,10 @@ import java.io.Serializable;
 public class WorkoutExerciseDto implements Serializable {
 
     @NotNull
-    Integer workoutId;
+    String workoutName;
 
     @NotNull
-    Integer exerciseId;
+    String exerciseName;
 
     @NotNull
     Integer orderIndex;

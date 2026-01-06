@@ -11,8 +11,8 @@ import java.util.List;
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface WorkoutExerciseMapper {
 
-    @Mapping(target = "workoutId", source = "workout.id")
-    @Mapping(target = "exerciseId", source = "exercise.id")
+    @Mapping(target = "workoutName", source = "workout.name")
+    @Mapping(target = "exerciseName", source = "exercise.name")
     @Mapping(target = "orderIndex", source = "orderIndex")
     @Mapping(target = "notes", source = "notes")
     WorkoutExerciseDto toDto(WorkoutExercise workoutExercise);
