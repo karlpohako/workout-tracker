@@ -70,12 +70,6 @@ public class WorkoutExerciseService {
         workoutExerciseRepository.deleteById(workoutExerciseId);
     }
 
-    private void doesWorkoutExerciseExist(Integer workoutExerciseId) {
-        if (!workoutExerciseRepository.existsById(workoutExerciseId)) {
-            throw new DataNotFoundException(Error.WORKOUTEXERCISE_NOT_FOUND.getMessage());
-        }
-    }
-
     private void updateExerciseIfChanged(WorkoutExerciseUpdateDto workoutExerciseDto, WorkoutExercise workoutExercise) {
         boolean exerciseStaysSame = workoutExercise.getExercise().getId().equals(workoutExerciseDto.getExerciseId());
         if (!exerciseStaysSame) {
@@ -113,6 +107,18 @@ public class WorkoutExerciseService {
         }
     }
 
+    private Integer adjustOrderIndexOnCreation(Integer workoutId, Integer requestOrderIndex) {
+        Integer maxIndex = workoutExerciseRepository.findWorkOutExerciseMaxOrderIndex(workoutId);
+
+        if (maxIndex != null && requestOrderIndex > maxIndex + 1) {
+            requestOrderIndex = maxIndex + 1;
+        } else if (maxIndex == null) {
+            requestOrderIndex = 1;
+        }
+
+        return requestOrderIndex;
+    }
+
     private WorkoutExercise createWorkoutExercise(Integer workoutId, WorkoutExerciseCreationDto workoutExerciseCreationDto) {
         Workout workout = getWorkout(workoutId);
         Exercise exercise = getExercise(workoutExerciseCreationDto.getExerciseId());
@@ -130,16 +136,10 @@ public class WorkoutExerciseService {
         return workoutExercise;
     }
 
-    private Integer adjustOrderIndexOnCreation(Integer workoutId, Integer requestOrderIndex) {
-        Integer maxIndex = workoutExerciseRepository.findWorkOutExerciseMaxOrderIndex(workoutId);
-
-        if (maxIndex != null && requestOrderIndex > maxIndex + 1) {
-            requestOrderIndex = maxIndex + 1;
-        } else if (maxIndex == null) {
-            requestOrderIndex = 1;
+    private void doesWorkoutExerciseExist(Integer workoutExerciseId) {
+        if (!workoutExerciseRepository.existsById(workoutExerciseId)) {
+            throw new DataNotFoundException(Error.WORKOUTEXERCISE_NOT_FOUND.getMessage());
         }
-
-        return requestOrderIndex;
     }
 
     private void doesWorkoutExist(Integer workoutId) {

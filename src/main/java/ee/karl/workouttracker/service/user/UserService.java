@@ -54,6 +54,13 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
+    private User createUser(UserCreationDto userCreationDto) {
+        if (userRepository.existsByUsername(userCreationDto.getUsername())) {
+            throw new DatabaseNameConflictException(Error.USER_ALREADY_EXISTS.getMessage());
+        }
+        return userMapper.createToUser(userCreationDto);
+    }
+
     private void doesUserExist(Integer userId) {
         if (!userRepository.existsById(userId)) {
             throw new DataNotFoundException(Error.USER_NOT_FOUND.getMessage());
@@ -63,12 +70,5 @@ public class UserService {
     private User getUserBy(Integer userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new DataNotFoundException(Error.USER_NOT_FOUND.getMessage()));
-    }
-
-    private User createUser(UserCreationDto userCreationDto) {
-        if (userRepository.existsByUsername(userCreationDto.getUsername())) {
-            throw new DatabaseNameConflictException(Error.USER_ALREADY_EXISTS.getMessage());
-        }
-        return userMapper.createToUser(userCreationDto);
     }
 }

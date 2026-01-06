@@ -102,6 +102,17 @@ public class ExerciseSetService {
         }
     }
 
+    private Integer adjustSetNumberOnCreation(Integer workoutExerciseId, Integer setNumber) {
+        Integer currentMaxSet = exerciseSetRepository.findMaxSetNumberByWorkoutExerciseId(workoutExerciseId);
+
+        if (currentMaxSet != null && setNumber > currentMaxSet + 1) {
+            setNumber = currentMaxSet + 1;
+        } else if (currentMaxSet == null) {
+            setNumber = 1;
+        }
+        return setNumber;
+    }
+
     private ExerciseSet createExerciseSet(Integer workoutExerciseId, ExerciseSetCreation exerciseSetCreation) {
         WorkoutExercise workoutExercise = getWorkoutExercise(workoutExerciseId);
         SetType setType = getSetType(exerciseSetCreation.getSetTypeId());
@@ -117,17 +128,6 @@ public class ExerciseSetService {
         exerciseSet.setSetType(setType);
 
         return exerciseSet;
-    }
-
-    private Integer adjustSetNumberOnCreation(Integer workoutExerciseId, Integer setNumber) {
-        Integer currentMaxSet = exerciseSetRepository.findMaxSetNumberByWorkoutExerciseId(workoutExerciseId);
-
-        if (currentMaxSet != null && setNumber > currentMaxSet + 1) {
-            setNumber = currentMaxSet + 1;
-        } else if (currentMaxSet == null) {
-            setNumber = 1;
-        }
-        return setNumber;
     }
 
     private void doesWorkoutExerciseExist(Integer workoutExerciseId) {

@@ -77,6 +77,16 @@ public class WorkoutService {
         return (int) duration.toMinutes();
     }
 
+    private Workout createWorkout(Integer userId, CreateWorkoutDto createWorkoutDto) {
+        Workout workout = workoutMapper.createDtoToWorkout(createWorkoutDto);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new DataNotFoundException(Error.USER_NOT_FOUND.getMessage()));
+        workout.setUser(user);
+        workout.setDate(LocalDate.now());
+        workout.setStartTime(LocalTime.now());
+        return workout;
+    }
+
     private void doesUserExist(Integer userId) {
         if (!userRepository.existsById(userId)) {
             throw new DataNotFoundException(Error.USER_NOT_FOUND.getMessage());
@@ -87,16 +97,6 @@ public class WorkoutService {
         if (!workoutRepository.existsById(workoutId)) {
             throw new DataNotFoundException(Error.WORKOUT_NOT_FOUND.getMessage());
         }
-    }
-
-    private Workout createWorkout(Integer userId, CreateWorkoutDto createWorkoutDto) {
-        Workout workout = workoutMapper.createDtoToWorkout(createWorkoutDto);
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new DataNotFoundException(Error.USER_NOT_FOUND.getMessage()));
-        workout.setUser(user);
-        workout.setDate(LocalDate.now());
-        workout.setStartTime(LocalTime.now());
-        return workout;
     }
 
     private Workout getWorkoutBy(Integer workoutId) {

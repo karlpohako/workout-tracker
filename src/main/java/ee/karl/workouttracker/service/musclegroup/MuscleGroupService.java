@@ -28,13 +28,13 @@ public class MuscleGroupService {
         muscleGroupRepository.save(muscleGroup);
     }
 
-    public List<MuscleGroupInfo> findAllMuscleGroups() {
-        return muscleGroupMapper.toInfoDtos(muscleGroupRepository.findAll());
-    }
-
     public MuscleGroupDto findMuscleGroupById(Integer muscleGroupId) {
         MuscleGroup muscleGroup = getMuscleGroup(muscleGroupId);
         return muscleGroupMapper.toDto(muscleGroup);
+    }
+
+    public List<MuscleGroupInfo> findAllMuscleGroups() {
+        return muscleGroupMapper.toInfoDtos(muscleGroupRepository.findAll());
     }
 
     public void updateMuscleGroup(Integer muscleGroupId, MuscleGroupDto muscleGroupDto) {

@@ -73,11 +73,6 @@ public class ExerciseService {
         }
     }
 
-    private Exercise getExerciseById(Integer exerciseId) {
-        return exerciseRepository.findById(exerciseId)
-                .orElseThrow(() -> new DataNotFoundException(Error.EXERCISE_NOT_FOUND.getMessage()));
-    }
-
     private void mapRelationshipsFromTo(ExerciseDto exerciseDto, Exercise exercise) {
         Category category = getCategory(exerciseDto.getCategory());
         MuscleGroup muscleGroup = getMuscleGroup(exerciseDto.getMuscleGroup());
@@ -86,6 +81,23 @@ public class ExerciseService {
         exercise.setCategory(category);
         exercise.setMuscleGroup(muscleGroup);
         exercise.setEquipmentType(equipmentType);
+    }
+
+    private Exercise createExercise(ExerciseDto exerciseDto) {
+        String name = exerciseDto.getName();
+        String category = exerciseDto.getCategory();
+
+        boolean exists = exerciseRepository.findExerciseByNameAndCategory(name, category);
+        if (exists) {
+            throw new DatabaseNameConflictException(Error.EXERCISE_ALREADY_EXISTS.getMessage());
+        }
+
+        return exerciseMapper.toExercise(exerciseDto);
+    }
+
+    private Exercise getExerciseById(Integer exerciseId) {
+        return exerciseRepository.findById(exerciseId)
+                .orElseThrow(() -> new DataNotFoundException(Error.EXERCISE_NOT_FOUND.getMessage()));
     }
 
     private Category getCategory(String categoryName) {
@@ -101,17 +113,5 @@ public class ExerciseService {
     private EquipmentType getEquipmentType(String equipmentTypeName) {
         return equipmentTypeRepository.findEquipmentTypeByName(equipmentTypeName)
                 .orElseThrow(() -> new DataNotFoundException(Error.EQUIPMENT_TYPE_NOT_FOUND.getMessage()));
-    }
-
-    private Exercise createExercise(ExerciseDto exerciseDto) {
-        String name = exerciseDto.getName();
-        String category = exerciseDto.getCategory();
-
-        boolean exists = exerciseRepository.findExerciseByNameAndCategory(name, category);
-        if (exists) {
-            throw new DatabaseNameConflictException(Error.EXERCISE_ALREADY_EXISTS.getMessage());
-        }
-
-        return exerciseMapper.toExercise(exerciseDto);
     }
 }

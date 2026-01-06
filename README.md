@@ -7,7 +7,8 @@ A Spring Boot application for tracking strength training workouts, exercises, se
 - **User Management**: Create and manage user profiles.
 - **Workout Tracking**: Log workouts with date and comments.
 - **Exercise Management**: Define exercises, categories, muscle groups, and equipment types.
-- **Set Details**: Record specific sets within an exercise, including weight, repetitions, and set types (e.g., warm-up, working set).
+- **Set Details**: Record specific sets within an exercise, including weight, repetitions, and set types (e.g., warm-up,
+  working set).
 
 ## Getting Started
 
@@ -35,7 +36,8 @@ Once the application is running, you can access the Swagger UI to explore and te
 
 ## Database
 
-The project uses **HSQLDB**. 
+The project uses **HSQLDB**.
+
 - By default, it runs in **in-memory** mode (`jdbc:hsqldb:hsql://localhost:9001/mydb` and `sa` as username).
 - Schema and initial data are loaded from `src/main/resources/schema.sql` and `src/main/resources/data.sql`.
 - Configuration can be found in `src/main/resources/application.properties`.

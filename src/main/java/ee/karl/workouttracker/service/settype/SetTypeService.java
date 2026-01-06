@@ -27,13 +27,13 @@ public class SetTypeService {
         setTypeRepository.save(setType);
     }
 
-    public List<SetTypeInfo> findAllSetTypes() {
-        return setTypeMapper.toInfoDtos(setTypeRepository.findAll());
-    }
-
     public SetTypeDto findSetTypeById(Integer setTypeId) {
         SetType setType = getSetType(setTypeId);
         return setTypeMapper.toDto(setType);
+    }
+
+    public List<SetTypeInfo> findAllSetTypes() {
+        return setTypeMapper.toInfoDtos(setTypeRepository.findAll());
     }
 
     public void updateSetType(Integer setTypeId, SetTypeDto setTypeDto) {
@@ -58,17 +58,17 @@ public class SetTypeService {
         }
     }
 
-    private SetType getSetType(Integer setTypeId) {
-        return setTypeRepository.findById(setTypeId).orElseThrow(
-                () -> new DataNotFoundException(Error.SET_TYPE_NOT_FOUND.getMessage())
-        );
-    }
-
     private SetType createSetType(SetTypeDto setTypeDto) {
         boolean existsByName = setTypeRepository.existsByName(setTypeDto.getName());
         if (existsByName) {
             throw new DataInUseException(Error.SET_TYPE_ALREADY_EXISTS.getMessage());
         }
         return setTypeMapper.toEntity(setTypeDto);
+    }
+
+    private SetType getSetType(Integer setTypeId) {
+        return setTypeRepository.findById(setTypeId).orElseThrow(
+                () -> new DataNotFoundException(Error.SET_TYPE_NOT_FOUND.getMessage())
+        );
     }
 }

@@ -33,6 +33,11 @@ public class CategoryService {
         return categoryMapper.toCategoryDto(category);
     }
 
+    public List<CategoryInfo> findAllCategories() {
+        List<Category> categories = categoryRepository.findAll();
+        return categoryMapper.toCategoryInfoDtos(categories);
+    }
+
     public void updateCategory(Integer categoryId, CategoryDto categoryDto) {
         Category category = getCategoryBy(categoryId);
         categoryMapper.updateCategoryFromTo(categoryDto, category);
@@ -58,11 +63,6 @@ public class CategoryService {
     private Category getCategoryBy(Integer categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new DataNotFoundException(Error.CATEGORY_NOT_FOUND.getMessage()));
-    }
-
-    public List<CategoryInfo> findAllCategories() {
-        List<Category> categories = categoryRepository.findAll();
-        return categoryMapper.toCategoryInfoDtos(categories);
     }
 
     private Category createCategory(CategoryDto categoryDto) {
