@@ -58,6 +58,17 @@ class WorkoutExerciseController {
         return workoutExerciseService.findAllWorkoutExercises();
     }
 
+    @GetMapping("/{workoutId}/workoutexercises")
+    @Operation(summary = "Get all workout exercises for a workout")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Returns all workout exercises for a workout"),
+            @ApiResponse(responseCode = "404", description = "Workout not found",
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    public List<WorkoutExerciseInfo> getWorkoutExercisesByWorkoutId(@PathVariable Integer workoutId) {
+        return workoutExerciseService.findAllWorkoutExercisesByWorkoutId(workoutId);
+    }
+
     @PutMapping("/{workoutExerciseId}")
     @Operation(summary = "Update workout exercise by ID")
     @ApiResponses(value = {

@@ -37,13 +37,19 @@ public class WorkoutExerciseService {
 
     }
 
+    public WorkoutExerciseDto findWorkoutExercise(Integer workoutExerciseId) {
+        WorkoutExercise workoutExercise = getWorkoutExercise(workoutExerciseId);
+        return workoutExerciseMapper.toDto(workoutExercise);
+    }
+
     public List<WorkoutExerciseInfo> findAllWorkoutExercises() {
         return workoutExerciseMapper.toInfoDtos(workoutExerciseRepository.findAll());
     }
 
-    public WorkoutExerciseDto findWorkoutExercise(Integer workoutExerciseId) {
-        WorkoutExercise workoutExercise = getWorkoutExercise(workoutExerciseId);
-        return workoutExerciseMapper.toDto(workoutExercise);
+    public List<WorkoutExerciseInfo> findAllWorkoutExercisesByWorkoutId(Integer workoutId) {
+        doesWorkoutExist(workoutId);
+        List<WorkoutExercise> workoutExercises = workoutExerciseRepository.findAllByWorkoutId(workoutId);
+        return workoutExerciseMapper.toInfoDtos(workoutExercises);
     }
 
     @Transactional
@@ -134,6 +140,12 @@ public class WorkoutExerciseService {
         }
 
         return requestOrderIndex;
+    }
+
+    private void doesWorkoutExist(Integer workoutId) {
+        if (!workoutRepository.existsById(workoutId)) {
+            throw new DataNotFoundException(Error.WORKOUT_NOT_FOUND.getMessage());
+        }
     }
 
     private Exercise getExercise(Integer exerciseId) {

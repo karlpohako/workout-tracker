@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface WorkoutExerciseRepository extends JpaRepository<WorkoutExercise, Integer> {
 
     @Modifying(clearAutomatically = true)
@@ -34,4 +36,8 @@ public interface WorkoutExerciseRepository extends JpaRepository<WorkoutExercise
 
     @Query("select (count(w) > 0) from WorkoutExercise w where w.exercise.id = ?1")
     boolean isExerciseUsedInWorkoutBy(Integer id);
+
+    @Query("select w from WorkoutExercise w where w.workout.id = ?1")
+    List<WorkoutExercise> findAllByWorkoutId(Integer id);
+
 }
