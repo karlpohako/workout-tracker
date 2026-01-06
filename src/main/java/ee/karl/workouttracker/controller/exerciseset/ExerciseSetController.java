@@ -59,6 +59,17 @@ class ExerciseSetController {
         return exerciseSetService.findAllExerciseSets();
     }
 
+    @GetMapping("/{workoutExerciseId}/exercisesets")
+    @Operation(summary = "Get all exercise sets for a workout exercise", description = "Returns all exercise sets for a workout exercise")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Exercise sets found"),
+            @ApiResponse(responseCode = "404", description = "Workout exercise not found",
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    public List<ExerciseSetInfo> getAllExerciseSetsForWorkoutExercise(@PathVariable Integer workoutExerciseId) {
+        return exerciseSetService.findAllExerciseSetsForWorkoutExercise(workoutExerciseId);
+    }
+
     @PutMapping("/{exerciseSetId}")
     @Operation(summary = "Update exercise set", description = "Updates exercise set by id")
     @ApiResponses(value = {

@@ -44,6 +44,12 @@ public class ExerciseSetService {
         return exerciseSetMapper.toInfoList(exerciseSets);
     }
 
+    public List<ExerciseSetInfo> findAllExerciseSetsForWorkoutExercise(Integer workoutExerciseId) {
+        doesWorkoutExerciseExist(workoutExerciseId);
+        List<ExerciseSet> exerciseSets = exerciseSetRepository.findAllByWorkoutExerciseId(workoutExerciseId);
+        return exerciseSetMapper.toInfoList(exerciseSets);
+    }
+
     @Transactional
     public void updateExerciseSet(Integer exerciseSetId, ExerciseSetUpdate exerciseSetUpdate) {
         ExerciseSet exerciseSet = adjustSetNumberOnUpdate(exerciseSetId, exerciseSetUpdate.getSetNumber());
@@ -122,6 +128,12 @@ public class ExerciseSetService {
             setNumber = 1;
         }
         return setNumber;
+    }
+
+    private void doesWorkoutExerciseExist(Integer workoutExerciseId) {
+        if (!workoutExerciseRepository.existsById(workoutExerciseId)) {
+            throw new DataNotFoundException(Error.WORKOUTEXERCISE_NOT_FOUND.getMessage());
+        }
     }
 
     private ExerciseSet getExerciseSet(Integer exerciseSetId) {

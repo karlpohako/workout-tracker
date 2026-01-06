@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface ExerciseSetRepository extends JpaRepository<ExerciseSet, Integer> {
 
     @Query("select (count(e) > 0) from ExerciseSet e where e.setType.id = ?1")
@@ -43,4 +45,8 @@ public interface ExerciseSetRepository extends JpaRepository<ExerciseSet, Intege
             "AND es.setNumber > :deletedSetNumber")
     void shiftSetNumbersAfterDeletion(@Param("workoutExerciseId") Integer workoutExerciseId,
                                       @Param("deletedSetNumber") Integer deletedSetNumber);
+
+    @Query("select e from ExerciseSet e where e.workoutExercise.id = ?1")
+    List<ExerciseSet> findAllByWorkoutExerciseId(Integer id);
+
 }
