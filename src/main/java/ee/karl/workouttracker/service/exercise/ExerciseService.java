@@ -82,6 +82,7 @@ public class ExerciseService {
         Category category = getCategory(exerciseDto.getCategory());
         MuscleGroup muscleGroup = getMuscleGroup(exerciseDto.getMuscleGroup());
         EquipmentType equipmentType = getEquipmentType(exerciseDto.getEquipmentType());
+
         exercise.setCategory(category);
         exercise.setMuscleGroup(muscleGroup);
         exercise.setEquipmentType(equipmentType);

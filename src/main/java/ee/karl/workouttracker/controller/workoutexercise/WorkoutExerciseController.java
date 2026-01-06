@@ -24,7 +24,7 @@ class WorkoutExerciseController {
 
     private final WorkoutExerciseService workoutExerciseService;
 
-    @PostMapping("/create/{workoutId}")
+    @PostMapping("/{workoutId}/create")
     @Operation(summary = "Create a new workout exercise")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Workout exercise created successfully"),
@@ -39,15 +39,6 @@ class WorkoutExerciseController {
         workoutExerciseService.saveWorkoutExercise(workoutId, workoutExerciseCreationDto);
     }
 
-    @GetMapping("/workoutexercises")
-    @Operation(summary = "Get all workout exercises")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Returns all workout exercises")
-    })
-    public List<WorkoutExerciseInfo> getWorkoutExercises() {
-        return workoutExerciseService.findAllWorkoutExercises();
-    }
-
     @GetMapping("/{workoutExerciseId}")
     @Operation(summary = "Get workout exercise by ID")
     @ApiResponses(value = {
@@ -56,6 +47,15 @@ class WorkoutExerciseController {
     })
     public WorkoutExerciseDto getWorkoutExerciseById(@PathVariable Integer workoutExerciseId) {
         return workoutExerciseService.findWorkoutExercise(workoutExerciseId);
+    }
+
+    @GetMapping("/workoutexercises")
+    @Operation(summary = "Get all workout exercises")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Returns all workout exercises")
+    })
+    public List<WorkoutExerciseInfo> getWorkoutExercises() {
+        return workoutExerciseService.findAllWorkoutExercises();
     }
 
     @PutMapping("/{workoutExerciseId}")

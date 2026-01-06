@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -49,10 +50,24 @@ public class WorkoutService {
         workoutRepository.save(workout);
     }
 
+    public void completeWorkout(Integer workoutId) {
+        Workout workout = getWorkoutBy(workoutId);
+        Integer durationMinutes = calculateWorkoutDuration(workout);
+
+        workout.setDurationMinutes(durationMinutes);
+        workoutRepository.save(workout);
+    }
+
     @Transactional
     public void deleteWorkout(Integer workoutId) {
         doesWorkoutExist(workoutId);
         workoutRepository.deleteById(workoutId);
+    }
+
+    private Integer calculateWorkoutDuration(Workout workout) {
+        workout.setEndTime(LocalTime.now());
+        Duration duration = Duration.between(workout.getStartTime(), workout.getEndTime());
+        return (int) duration.toMinutes();
     }
 
     private void doesWorkoutExist(Integer workoutId) {

@@ -34,8 +34,9 @@ public interface ExerciseSetMapper {
     @Mapping(target = "rpe", source = "rpe")
     @Mapping(target = "notes", source = "notes")
     @Mapping(target = "completed", source = "completed")
-    ExerciseSet creationToEntity (ExerciseSetCreation creation);
+    ExerciseSet creationToEntity(ExerciseSetCreation creation);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @InheritConfiguration(name = "creationToEntity")
     ExerciseSet updateToEntity(ExerciseSetUpdate update, @MappingTarget ExerciseSet exerciseSet);
 

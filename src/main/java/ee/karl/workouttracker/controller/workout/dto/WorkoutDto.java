@@ -16,7 +16,7 @@ import java.time.LocalTime;
 public class WorkoutDto implements Serializable {
 
     @NotNull
-    private Integer userId;
+    private String userUsername;
 
     @Size(max = 100)
     @NotNull

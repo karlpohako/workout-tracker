@@ -27,11 +27,13 @@ public interface UserMapper {
 
     @InheritConfiguration(name = "toUser")
     @Mapping(target = "password", source = "password")
-    User createDtoToUser(UserCreationDto userCreationDto);
+    User createToUser(UserCreationDto userCreationDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "email", source = "email")
     User emailUpdate(EmailUpdateDto emailUpdateDto, @MappingTarget User user);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "password", source = "password")
     User passwordUpdate(PasswordUpdateDto passwordUpdateDto, @MappingTarget User user);
 }

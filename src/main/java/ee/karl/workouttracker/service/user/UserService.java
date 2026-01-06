@@ -69,6 +69,6 @@ public class UserService {
         if (userRepository.existsByUsername(userCreationDto.getUsername())) {
             throw new DatabaseNameConflictException(Error.USER_ALREADY_EXISTS.getMessage());
         }
-        return userMapper.createDtoToUser(userCreationDto);
+        return userMapper.createToUser(userCreationDto);
     }
 }

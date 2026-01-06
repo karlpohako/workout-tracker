@@ -24,7 +24,7 @@ class ExerciseSetController {
 
     private final ExerciseSetService exerciseSetService;
 
-    @PostMapping("/create/{workoutExerciseId}")
+    @PostMapping("/{workoutExerciseId}/create")
     @Operation(summary = "Create exercise set", description = "Creates a new exercise set")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Exercise set created"),
@@ -33,7 +33,7 @@ class ExerciseSetController {
             @ApiResponse(responseCode = "404", description = "Workout exercise not found",
                     content = @Content(schema = @Schema(implementation = ApiError.class))),
             @ApiResponse(responseCode = "404", description = "Set type not found",
-            content = @Content(schema = @Schema(implementation = ApiError.class)))
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     public void createExerciseSet(@PathVariable Integer workoutExerciseId, @Valid @RequestBody ExerciseSetCreation exerciseSetCreation) {
         exerciseSetService.saveExerciseSet(workoutExerciseId, exerciseSetCreation);

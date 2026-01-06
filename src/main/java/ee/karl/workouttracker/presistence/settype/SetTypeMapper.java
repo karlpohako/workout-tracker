@@ -15,11 +15,13 @@ public interface SetTypeMapper {
     @Mapping(target = "name", source = "name")
     SetTypeDto toDto(SetType setType);
 
-    @Mapping(target = "name", source = "name")
+    @InheritConfiguration(name = "toDto")
+    @Mapping(target = "id", source = "id")
     SetTypeInfo toInfoDto(SetType setType);
 
     List<SetTypeInfo> toInfoDtos(List<SetType> setTypes);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @InheritConfiguration(name = "toEntity")
     SetType updateSetType(SetTypeDto setTypeDto, @MappingTarget SetType setType);
 }

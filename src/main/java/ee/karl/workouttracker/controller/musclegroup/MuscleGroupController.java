@@ -35,15 +35,6 @@ public class MuscleGroupController {
         muscleGroupService.saveMuscleGroup(muscleGroupDto);
     }
 
-    @GetMapping("/musclegroups")
-    @Operation(summary = "Get all muscle groups", description = "Retrieve a list of all muscle groups")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Returns a list of all muscle groups")
-    })
-    public List<MuscleGroupInfo> getAllMuscleGroups() {
-        return muscleGroupService.findAllMuscleGroups();
-    }
-
     @GetMapping("/{muscleGroupId}")
     @Operation(summary = "Get muscle group by ID", description = "Retrieve a muscle group by its id")
     @ApiResponses(value = {
@@ -53,6 +44,15 @@ public class MuscleGroupController {
     })
     public MuscleGroupDto getMuscleGroupById(@PathVariable Integer muscleGroupId) {
         return muscleGroupService.findMuscleGroupById(muscleGroupId);
+    }
+
+    @GetMapping("/musclegroups")
+    @Operation(summary = "Get all muscle groups", description = "Retrieve a list of all muscle groups")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Returns a list of all muscle groups")
+    })
+    public List<MuscleGroupInfo> getAllMuscleGroups() {
+        return muscleGroupService.findAllMuscleGroups();
     }
 
     @PutMapping("/{muscleGroupId}")

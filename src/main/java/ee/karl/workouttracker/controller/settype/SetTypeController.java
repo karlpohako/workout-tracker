@@ -33,14 +33,6 @@ public class SetTypeController {
         setTypeService.saveSetType(setTypeDto);
     }
 
-    @GetMapping("/settypes")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Returns all set types")
-    })
-    public List<SetTypeInfo> getAllSetTypes() {
-        return setTypeService.findAllSetTypes();
-    }
-
     @GetMapping("/{setTypeId}")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Returns set type by id"),
@@ -49,6 +41,14 @@ public class SetTypeController {
     })
     public SetTypeDto getSetTypeById(@PathVariable Integer setTypeId) {
         return setTypeService.findSetTypeById(setTypeId);
+    }
+
+    @GetMapping("/settypes")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Returns all set types")
+    })
+    public List<SetTypeInfo> getAllSetTypes() {
+        return setTypeService.findAllSetTypes();
     }
 
     @PutMapping("/{setTypeId}")

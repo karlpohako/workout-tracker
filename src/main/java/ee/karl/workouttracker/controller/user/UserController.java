@@ -54,7 +54,7 @@ public class UserController {
         return userService.findAllUsers();
     }
 
-    @PutMapping("/email/{userId}")
+    @PutMapping("/{userId}/email")
     @Operation(summary = "Update user email by id", description = "Updates user email with given id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Email updated successfully"),
@@ -67,7 +67,7 @@ public class UserController {
         userService.updateUserEmail(userId, emailUpdateDto);
     }
 
-    @PutMapping("/password/{userId}")
+    @PutMapping("/{userId}/password")
     @Operation(summary = "Update user password by id", description = "Updates user password with given id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Password updated successfully"),

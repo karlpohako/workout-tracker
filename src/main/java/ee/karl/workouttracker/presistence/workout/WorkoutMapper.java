@@ -11,17 +11,7 @@ import java.util.List;
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface WorkoutMapper {
 
-
-    @Mapping(target = "user.id", ignore = true)
-    @Mapping(target = "name", source = "name")
-    @Mapping(target = "date", ignore = true)
-    @Mapping(target = "startTime", ignore = true)
-    @Mapping(target = "endTime", ignore = true)
-    @Mapping(target = "durationMinutes", ignore = true)
-    @Mapping(target = "notes", source = "notes")
-    Workout toWorkout(WorkoutDto workoutDto);
-
-    @Mapping(target = "userId", source = "user.id")
+    @Mapping(source = "user.username", target = "userUsername")
     @Mapping(target = "name", source = "name")
     @Mapping(target = "date", source = "date")
     @Mapping(target = "startTime", source = "startTime")
@@ -44,5 +34,5 @@ public interface WorkoutMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "name", source = "name")
     @Mapping(target = "notes", source = "notes")
-    void updateDtoToWorkout(UpdateWorkoutDto updateWorkoutDto, @MappingTarget Workout workout);
+    Workout updateDtoToWorkout(UpdateWorkoutDto updateWorkoutDto, @MappingTarget Workout workout);
 }

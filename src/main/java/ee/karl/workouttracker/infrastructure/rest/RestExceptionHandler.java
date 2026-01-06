@@ -1,9 +1,9 @@
 package ee.karl.workouttracker.infrastructure.rest;
 
 import ee.karl.workouttracker.infrastructure.rest.error.ApiError;
+import ee.karl.workouttracker.infrastructure.rest.exception.DataInUseException;
 import ee.karl.workouttracker.infrastructure.rest.exception.DataNotFoundException;
 import ee.karl.workouttracker.infrastructure.rest.exception.DatabaseNameConflictException;
-import ee.karl.workouttracker.infrastructure.rest.exception.DataInUseException;
 import ee.karl.workouttracker.infrastructure.rest.exception.ForbiddenException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;

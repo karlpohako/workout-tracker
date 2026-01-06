@@ -106,6 +106,7 @@ public class WorkoutExerciseService {
             workoutExerciseRepository.incrementOrderIndexInRange(workoutId, targetOrderIndex, currentOrderIndex);
         }
     }
+
     private WorkoutExercise createWorkoutExercise(Integer workoutId, WorkoutExerciseCreationDto workoutExerciseCreationDto) {
         Workout workout = getWorkout(workoutId);
         Exercise exercise = getExercise(workoutExerciseCreationDto.getExerciseId());

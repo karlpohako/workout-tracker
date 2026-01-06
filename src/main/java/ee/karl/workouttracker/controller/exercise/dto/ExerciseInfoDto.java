@@ -14,6 +14,7 @@ import java.time.Instant;
 public class ExerciseInfoDto extends ExerciseDto {
 
     private Integer exerciseId;
+
     private Instant createdAt;
 
 }

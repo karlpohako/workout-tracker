@@ -69,6 +69,17 @@ public class WorkoutController {
         workoutService.updateWorkout(workoutId, updateWorkoutDto);
     }
 
+    @PutMapping("/{workoutId}/complete")
+    @Operation(summary = "Mark workout as completed", description = "Marks workout as completed by setting endTime")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Workout marked as completed successfully"),
+            @ApiResponse(responseCode = "404", description = "Workout with the specified ID not found",
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    public void completeWorkout(@PathVariable Integer workoutId) {
+        workoutService.completeWorkout(workoutId);
+    }
+
     @DeleteMapping("/{workoutId}")
     @Operation(summary = "Delete workout by id", description = "Deletes workout by id")
     @ApiResponses(value = {
